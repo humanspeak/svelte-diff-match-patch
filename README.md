@@ -1,18 +1,18 @@
-# @humanspeak/svelte-markdown
+# @humanspeak/svelte-diff-match-patch
 
-A powerful, customizable markdown renderer for Svelte with TypeScript support. Built as a successor to the original svelte-markdown package by Pablo Berganza, now maintained and enhanced by Humanspeak, Inc.
+A powerful, customizable markdown renderer for Svelte with TypeScript support. Built as a successor to the original svelte-diff-match-patch package by Pablo Berganza, now maintained and enhanced by Humanspeak, Inc.
 
-[![NPM version](https://img.shields.io/npm/v/@humanspeak/svelte-markdown.svg)](https://www.npmjs.com/package/@humanspeak/svelte-markdown)
-[![Build Status](https://github.com/humanspeak/svelte-markdown/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/humanspeak/svelte-markdown/actions/workflows/npm-publish.yml)
-[![Coverage Status](https://coveralls.io/repos/github/humanspeak/svelte-markdown/badge.svg?branch=main)](https://coveralls.io/github/humanspeak/svelte-markdown?branch=main)
-[![License](https://img.shields.io/npm/l/@humanspeak/svelte-markdown.svg)](https://github.com/humanspeak/svelte-markdown/blob/main/LICENSE)
-[![Downloads](https://img.shields.io/npm/dm/@humanspeak/svelte-markdown.svg)](https://www.npmjs.com/package/@humanspeak/svelte-markdown)
-[![CodeQL](https://github.com/humanspeak/svelte-markdown/actions/workflows/codeql.yml/badge.svg)](https://github.com/humanspeak/svelte-markdown/actions/workflows/codeql.yml)
-[![Install size](https://packagephobia.com/badge?p=@humanspeak/svelte-markdown)](https://packagephobia.com/result?p=@humanspeak/svelte-markdown)
+[![NPM version](https://img.shields.io/npm/v/@humanspeak/svelte-diff-match-patch.svg)](https://www.npmjs.com/package/@humanspeak/svelte-diff-match-patch)
+[![Build Status](https://github.com/humanspeak/svelte-diff-match-patch/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/humanspeak/svelte-diff-match-patch/actions/workflows/npm-publish.yml)
+[![Coverage Status](https://coveralls.io/repos/github/humanspeak/svelte-diff-match-patch/badge.svg?branch=main)](https://coveralls.io/github/humanspeak/svelte-diff-match-patch?branch=main)
+[![License](https://img.shields.io/npm/l/@humanspeak/svelte-diff-match-patch.svg)](https://github.com/humanspeak/svelte-diff-match-patch/blob/main/LICENSE)
+[![Downloads](https://img.shields.io/npm/dm/@humanspeak/svelte-diff-match-patch.svg)](https://www.npmjs.com/package/@humanspeak/svelte-diff-match-patch)
+[![CodeQL](https://github.com/humanspeak/svelte-diff-match-patch/actions/workflows/codeql.yml/badge.svg)](https://github.com/humanspeak/svelte-diff-match-patch/actions/workflows/codeql.yml)
+[![Install size](https://packagephobia.com/badge?p=@humanspeak/svelte-diff-match-patch)](https://packagephobia.com/result?p=@humanspeak/svelte-diff-match-patch)
 [![Code Style: Trunk](https://img.shields.io/badge/code%20style-trunk-blue.svg)](https://trunk.io)
 [![TypeScript](https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg)](http://www.typescriptlang.org/)
-[![Types](https://img.shields.io/npm/types/@humanspeak/svelte-markdown.svg)](https://www.npmjs.com/package/@humanspeak/svelte-markdown)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/humanspeak/svelte-markdown/graphs/commit-activity)
+[![Types](https://img.shields.io/npm/types/@humanspeak/svelte-diff-match-patch.svg)](https://www.npmjs.com/package/@humanspeak/svelte-diff-match-patch)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/humanspeak/svelte-diff-match-patch/graphs/commit-activity)
 
 ## Features
 
@@ -57,14 +57,14 @@ A powerful, customizable markdown renderer for Svelte with TypeScript support. B
 ## Installation
 
 ```bash
-npm i -S @humanspeak/svelte-markdown
+npm i -S @humanspeak/svelte-diff-match-patch
 ```
 
 Or with your preferred package manager:
 
 ```bash
-pnpm add @humanspeak/svelte-markdown
-yarn add @humanspeak/svelte-markdown
+pnpm add @humanspeak/svelte-diff-match-patch
+yarn add @humanspeak/svelte-diff-match-patch
 ```
 
 ## External Dependencies
@@ -95,7 +95,7 @@ This package carefully selects its dependencies to provide a robust and maintain
 
 ```svelte
 <script lang="ts">
-    import SvelteMarkdown from '@humanspeak/svelte-markdown'
+    import SvelteMarkdown from '@humanspeak/svelte-diff-match-patch'
 
     const source = `
 # This is a header
@@ -122,7 +122,7 @@ import type {
     Token,
     TokensList,
     SvelteMarkdownOptions
-} from '@humanspeak/svelte-markdown'
+} from '@humanspeak/svelte-diff-match-patch'
 ```
 
 ## Custom Renderer Example
@@ -147,7 +147,7 @@ Here's a complete example of a custom renderer with TypeScript support:
 </a>
 ```
 
-If you would like to extend other renderers please take a look inside the [renderers folder](https://github.com/humanspeak/svelte-markdown/tree/main/src/lib/renderers) for the default implentation of them. If you would like feature additions please feel free to open an issue!
+If you would like to extend other renderers please take a look inside the [renderers folder](https://github.com/humanspeak/svelte-diff-match-patch/tree/main/src/lib/renderers) for the default implentation of them. If you would like feature additions please feel free to open an issue!
 
 ## Advanced Features
 
@@ -240,7 +240,7 @@ The `html` renderer is special and can be configured separately to handle HTML e
 You can customize HTML rendering by providing your own components:
 
 ```typescript
-import type { HtmlRenderers } from '@humanspeak/svelte-markdown'
+import type { HtmlRenderers } from '@humanspeak/svelte-diff-match-patch'
 
 const customHtmlRenderers: Partial<HtmlRenderers> = {
     div: YourCustomDivComponent,
@@ -254,7 +254,7 @@ The component emits a `parsed` event when tokens are calculated:
 
 ```svelte
 <script lang="ts">
-    import SvelteMarkdown from '@humanspeak/svelte-markdown'
+    import SvelteMarkdown from '@humanspeak/svelte-diff-match-patch'
 
     const handleParsed = (tokens: Token[] | TokensList) => {
         console.log('Parsed tokens:', tokens)
