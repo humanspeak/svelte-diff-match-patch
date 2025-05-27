@@ -1,3 +1,4 @@
+import type { Diff } from 'diff-match-patch-ts'
 import type { Snippet } from 'svelte'
 import SvelteDiffMatchPatch from './SvelteDiffMatchPatch.svelte'
 
@@ -14,7 +15,7 @@ export type RendererClasses = {
     insert?: string
 }
 export type SvelteDiffMatchPatchTiming = { main: number; cleanup: number; total: number }
-
+export type SvelteDiffMatchPatchDiff = Diff
 export interface SvelteDiffMatchPatchProps {
     /**
      * The original (left-side) string to compare.
@@ -91,7 +92,7 @@ export interface SvelteDiffMatchPatchProps {
      * ```
      */
     /* trunk-ignore(eslint/no-unused-vars) */
-    onProcessing?: (timing: SvelteDiffMatchPatchTiming) => void
+    onProcessing?: (timing: SvelteDiffMatchPatchTiming, diffs: SvelteDiffMatchPatchDiff[]) => void
     /**
      * Custom Svelte snippets for rendering diff segments.
      *

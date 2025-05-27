@@ -13,7 +13,7 @@
                     {#snippet child({ props }: { props: Record<string, unknown> })}
                         <a href="##" {...props}>
                             <div class="flex w-full gap-2">
-                                {#if $mode === 'dark'}
+                                {#if mode.current === 'dark'}
                                     <img
                                         src="./humanspeak-dark.svg"
                                         alt="humanspeak logo"
@@ -22,7 +22,7 @@
                                 {:else}
                                     <img src="./humanspeak.svg" alt="humanspeak logo" class="h-5" />
                                 {/if}
-                                <span>/markdown</span>
+                                <span>/diff</span>
                             </div>
                         </a>
                     {/snippet}
@@ -52,6 +52,11 @@
                         <Collapsible.Content>
                             <Sidebar.MenuSub>
                                 <Sidebar.MenuSubItem>
+                                    <Sidebar.MenuButton>
+                                        <a href="https://markdown.svelte.page">
+                                            <span>/markdown</span>
+                                        </a>
+                                    </Sidebar.MenuButton>
                                     <Sidebar.MenuButton>
                                         <a href="https://virtuallist.svelte.page">
                                             <span>/virtual-list</span>

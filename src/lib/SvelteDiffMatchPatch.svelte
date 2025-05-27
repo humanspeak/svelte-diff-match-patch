@@ -81,7 +81,7 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
             cleanup: endTotal - startCleanup,
             total: endTotal - startTotal
         }
-        onProcessing?.(timing)
+        onProcessing?.(timing, diffs)
         displayDiffs = diffs
     }
 
@@ -104,12 +104,12 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
     {@const [operation, text] = diff}
     {#if text.includes('\n')}
         {#each text.split('\n') as line, lineIndex (lineIndex)}
-            {#if lineIndex > 0}{@render displayRenderers.lineBreak()}{/if}{@const renderer =
-                operation === 0
-                    ? displayRenderers.equal
-                    : operation === -1
-                      ? displayRenderers.remove
-                      : displayRenderers.insert}{@render renderer(line)}
+            {#if lineIndex > 0}{@render displayRenderers.lineBreak()}{/if}{#if line.length > 0}{@const renderer =
+                    operation === 0
+                        ? displayRenderers.equal
+                        : operation === -1
+                          ? displayRenderers.remove
+                          : displayRenderers.insert}{@render renderer(line)}{/if}
         {/each}
     {:else if operation === 0}
         {@render displayRenderers.equal(text)}

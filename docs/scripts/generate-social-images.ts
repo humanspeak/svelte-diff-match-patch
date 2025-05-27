@@ -50,10 +50,7 @@ async function main() {
         )
 
         console.log('Generating OpenGraph card...')
-        await captureImage(
-            `${baseUrl}?type=og`,
-            path.join(outputDir, 'svelte-diff-opengraph.png')
-        )
+        await captureImage(`${baseUrl}?type=og`, path.join(outputDir, 'svelte-diff-opengraph.png'))
 
         console.log('Social images generated successfully!')
     } catch (error) {

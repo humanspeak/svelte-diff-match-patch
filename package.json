@@ -63,6 +63,11 @@
         "test:only": "vitest run",
         "test:watch": "vitest"
     },
+    "overrides": {
+        "@sveltejs/kit": {
+            "cookie": "^0.7.0"
+        }
+    },
     "dependencies": {
         "diff-match-patch-ts": "^0.6.0"
     },
@@ -104,15 +109,10 @@
         "svelte": "^5.0.0"
     },
     "volta": {
-        "node": "22.15.1"
+        "node": "22.16.0"
     },
     "publishConfig": {
         "access": "public"
-    },
-    "overrides": {
-        "@sveltejs/kit": {
-            "cookie": "^0.7.0"
-        }
     },
     "tags": [
         "svelte",
