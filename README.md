@@ -128,6 +128,70 @@ import type {
 | onProcessing      | `function` | -       | Callback for timing and diff information       |
 | rendererClasses   | `object`   | -       | CSS classes for diff highlighting              |
 
+## Custom Rendering with Snippets
+
+You can customize how the diff is rendered using Svelte snippets. This gives you full control over the HTML structure and styling of each diff part.
+
+```svelte
+<script lang="ts">
+    import SvelteDiffMatchPatch from '@humanspeak/svelte-diff-match-patch'
+
+    let originalText = $state(`I am the very model of a modern Major-General,
+I've information vegetable, animal, and mineral,
+I know the kings of England, and I quote the fights historical,
+From Marathon to Waterloo, in order categorical.`)
+
+    let modifiedText = $state(`I am the very model of a cartoon individual,
+My animation's comical, unusual, and whimsical,
+I'm quite adept at funny gags, comedic theory I have read,
+From wicked puns and stupid jokes to anvils that drop on your head.`)
+</script>
+
+<SvelteDiffMatchPatch {originalText} {modifiedText}>
+    {#snippet remove(text: string)}
+        <span class="diff-snippet-remove">{text}</span>
+    {/snippet}
+    {#snippet insert(text: string)}
+        <span class="diff-snippet-insert">{text}</span>
+    {/snippet}
+    {#snippet equal(text: string)}
+        <span class="diff-snippet-equal">{text}</span>
+    {/snippet}
+    {#snippet lineBreak()}
+        <br /><br />
+    {/snippet}
+</SvelteDiffMatchPatch>
+
+<style>
+    :global(.diff-snippet-remove) {
+        background-color: #ffd7d5;
+        text-decoration: line-through;
+    }
+    :global(.diff-snippet-insert) {
+        background-color: #d4ffd4;
+    }
+</style>
+```
+
+### Available Snippets
+
+| Snippet   | Parameters | Description                                  |
+| --------- | ---------- | -------------------------------------------- |
+| remove    | `text`     | Renders removed text (in originalText only)  |
+| insert    | `text`     | Renders inserted text (in modifiedText only) |
+| equal     | `text`     | Renders unchanged text (in both texts)       |
+| lineBreak | -          | Renders line breaks between diff sections    |
+
+You can use these snippets to:
+
+- Customize the HTML structure of each diff part
+- Apply custom styling to different types of changes
+- Add additional elements or attributes
+- Implement custom animations or transitions
+- Add tooltips or other interactive elements
+
+If you don't provide snippets, the component will use the default rendering with the `rendererClasses` prop.
+
 ## Events
 
 The component emits a `processing` event with timing and diff information:
