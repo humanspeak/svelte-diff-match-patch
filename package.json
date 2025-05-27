@@ -1,6 +1,6 @@
 {
     "name": "@humanspeak/svelte-diff-match-patch",
-    "version": "0.0.0",
+    "version": "0.0.1",
     "description": "A powerful, customizable diff-match-patch library for Svelte with TypeScript support",
     "keywords": [
         "svelte",
