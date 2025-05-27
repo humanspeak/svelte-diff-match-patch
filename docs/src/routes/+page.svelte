@@ -151,4 +151,12 @@ From wicked puns and stupid jokes to anvils that drop on your head.`)
     :global(.diff-insert) {
         background-color: #d4ffd4;
     }
+
+    :global(.dark .diff-remove) {
+        background-color: #ff0000;
+        text-decoration: line-through;
+    }
+    :global(.dark .diff-insert) {
+        background-color: #00ff00;
+    }
 </style>
