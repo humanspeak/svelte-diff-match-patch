@@ -1,6 +1,6 @@
 # @humanspeak/svelte-diff-match-patch
 
-A powerful, customizable markdown renderer for Svelte with TypeScript support. Built as a successor to the original svelte-diff-match-patch package by Pablo Berganza, now maintained and enhanced by Humanspeak, Inc.
+A powerful, customizable diff-match-patch component for Svelte with TypeScript support.
 
 [![NPM version](https://img.shields.io/npm/v/@humanspeak/svelte-diff-match-patch.svg)](https://www.npmjs.com/package/@humanspeak/svelte-diff-match-patch)
 [![Build Status](https://github.com/humanspeak/svelte-diff-match-patch/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/humanspeak/svelte-diff-match-patch/actions/workflows/npm-publish.yml)
@@ -16,43 +16,33 @@ A powerful, customizable markdown renderer for Svelte with TypeScript support. B
 
 ## Features
 
-- 🚀 Full markdown syntax support through Marked
+- 🚀 High-performance diff algorithm implementation
 - 💪 Complete TypeScript support with strict typing
-- 🎨 Customizable component rendering system
-- 🔒 Secure HTML parsing via HTMLParser2
-- 🎯 GitHub-style slug generation for headers
-- ♿ WCAG 2.1 accessibility compliance
+- 🎨 Customizable diff rendering with CSS classes OR svelte snippets
+- 🔒 Safe and efficient text comparison
+- 🎯 Configurable cleanup algorithms (semantic and efficiency)
 - 🧪 Comprehensive test coverage (vitest and playwright)
 - 🔄 Svelte 5 runes compatibility
-- 🛡️ XSS protection and sanitization
-- 🎨 Custom Marked extensions support (e.g., GitHub-style alerts)
-- 🔍 Improved attribute handling and component isolation
-- 📦 Enhanced token cleanup and nested content support
+- ⚡ Configurable timeout for large text comparisons
+- 📊 Detailed timing and diff statistics
+- 🎨 Customizable diff highlighting styles
+- 🔍 Real-time diff updates
 
 ## Recent Updates
 
 ### New Features
 
-- Improved HTML attribute isolation for nested components
-- Enhanced token cleanup for better nested content handling
-- Added proper attribute inheritance control
-- Implemented strict debugging checks in CI/CD pipeline
+- Added detailed timing information for diff operations
+- Enhanced cleanup algorithms for better diff results
+- Improved performance for large text comparisons
+- Added TypeScript types for all component props and events
+- Implemented proper state management with Svelte 5 runes
 
 ### Testing Improvements
 
 - Enhanced Playwright E2E test coverage
-- Added comprehensive tests for custom extensions
+- Added comprehensive tests for cleanup algorithms
 - Improved test reliability with proper component mounting checks
-- Added specific test cases for nested component scenarios
-- **Note:** Performance tests use a higher threshold for Firefox due to slower execution in CI environments. See `tests/performance.test.ts` for details.
-
-### CI/CD Enhancements
-
-- Added automated debugging statement detection
-- Improved release workflow with GPG signing
-- Enhanced PR validation and automated version bumping
-- Added manual workflow triggers for better release control
-- Implemented monthly cache cleanup
 
 ## Installation
 
@@ -67,49 +57,51 @@ pnpm add @humanspeak/svelte-diff-match-patch
 yarn add @humanspeak/svelte-diff-match-patch
 ```
 
-## External Dependencies
-
-This package carefully selects its dependencies to provide a robust and maintainable solution:
-
-### Core Dependencies
-
-- **marked**
-
-    - Industry-standard markdown parser
-    - Battle-tested in production
-    - Extensive security features
-
-- **github-slugger**
-
-    - GitHub-style heading ID generation
-    - Unicode support
-    - Collision handling
-
-- **htmlparser2**
-
-    - High-performance HTML parsing
-    - Streaming capabilities
-    - Security-focused design
-
 ## Basic Usage
 
 ```svelte
 <script lang="ts">
-    import SvelteMarkdown from '@humanspeak/svelte-diff-match-patch'
+    import SvelteDiffMatchPatch from '@humanspeak/svelte-diff-match-patch'
 
-    const source = `
-# This is a header
+    let originalText = $state(`I am the very model of a modern Major-General,
+I've information vegetable, animal, and mineral,
+I know the kings of England, and I quote the fights historical,
+From Marathon to Waterloo, in order categorical.`)
 
-This is a paragraph with **bold** and <em>mixed HTML</em>.
+    let modifiedText = $state(`I am the very model of a cartoon individual,
+My animation's comical, unusual, and whimsical,
+I'm quite adept at funny gags, comedic theory I have read,
+From wicked puns and stupid jokes to anvils that drop on your head.`)
 
-* List item with \`inline code\`
-* And a [link](https://svelte.dev)
-  * With nested items
-  * Supporting full markdown
-`
+    const onProcessing = (timing, diff) => {
+        console.log('Diff timing:', timing)
+        console.log('Diff result:', diff)
+    }
 </script>
 
-<SvelteMarkdown {source} />
+<SvelteDiffMatchPatch
+    {originalText}
+    {modifiedText}
+    timeout={1}
+    cleanupSemantic={false}
+    cleanupEfficiency={4}
+    {onProcessing}
+    rendererClasses={{
+        remove: 'diff-remove',
+        insert: 'diff-insert',
+        equal: 'diff-equal'
+    }}
+/>
+
+<style>
+    :global(.diff-remove) {
+        background-color: #ffd7d5;
+        text-decoration: line-through;
+    }
+    :global(.diff-insert) {
+        background-color: #d4ffd4;
+    }
+</style>
 ```
 
 ## TypeScript Support
@@ -118,169 +110,69 @@ The package is written in TypeScript and includes full type definitions:
 
 ```typescript
 import type {
-    Renderers,
-    Token,
-    TokensList,
-    SvelteMarkdownOptions
+    SvelteDiffMatchPatchTiming,
+    SvelteDiffMatchPatchDiff,
+    SvelteDiffMatchPatchProps
 } from '@humanspeak/svelte-diff-match-patch'
-```
-
-## Custom Renderer Example
-
-Here's a complete example of a custom renderer with TypeScript support:
-
-```svelte
-<script lang="ts">
-    import type { Snippet } from 'svelte'
-
-    interface Props {
-        children?: Snippet
-        href?: string
-        title?: string
-    }
-
-    const { href = '', title = '', children }: Props = $props()
-</script>
-
-<a {href} {title} class="custom-link">
-    {@render children?.()}
-</a>
-```
-
-If you would like to extend other renderers please take a look inside the [renderers folder](https://github.com/humanspeak/svelte-diff-match-patch/tree/main/src/lib/renderers) for the default implentation of them. If you would like feature additions please feel free to open an issue!
-
-## Advanced Features
-
-### Table Support with Mixed Content
-
-The package excels at handling complex nested structures and mixed content:
-
-```markdown
-| Type       | Content                                 |
-| ---------- | --------------------------------------- |
-| Nested     | <div>**bold** and _italic_</div>        |
-| Mixed List | <ul><li>Item 1</li><li>Item 2</li></ul> |
-| Code       | <code>`inline code`</code>              |
-```
-
-### HTML in Markdown
-
-Seamlessly mix HTML and Markdown:
-
-```markdown
-<div style="color: blue">
-  ### This is a Markdown heading inside HTML
-  And here's some **bold** text too!
-</div>
-
-<details>
-<summary>Click to expand</summary>
-
-- This is a markdown list
-- Inside an HTML details element
-- Supporting **bold** and _italic_ text
-
-</details>
-```
-
-## Available Renderers
-
-- `text` - Text within other elements
-- `paragraph` - Paragraph (`<p>`)
-- `em` - Emphasis (`<em>`)
-- `strong` - Strong/bold (`<strong>`)
-- `hr` - Horizontal rule (`<hr>`)
-- `blockquote` - Block quote (`<blockquote>`)
-- `del` - Deleted/strike-through (`<del>`)
-- `link` - Link (`<a>`)
-- `image` - Image (`<img>`)
-- `table` - Table (`<table>`)
-- `tablehead` - Table head (`<thead>`)
-- `tablebody` - Table body (`<tbody>`)
-- `tablerow` - Table row (`<tr>`)
-- `tablecell` - Table cell (`<td>`/`<th>`)
-- `list` - List (`<ul>`/`<ol>`)
-- `listitem` - List item (`<li>`)
-- `heading` - Heading (`<h1>`-`<h6>`)
-- `codespan` - Inline code (`<code>`)
-- `code` - Block of code (`<pre><code>`)
-- `html` - HTML node
-- `rawtext` - All other text that is going to be included in an object above
-
-### Optional List Renderers
-
-For fine-grained styling:
-
-- `orderedlistitem` - Items in ordered lists
-- `unorderedlistitem` - Items in unordered lists
-
-### HTML Renderers
-
-The `html` renderer is special and can be configured separately to handle HTML elements:
-
-| Element  | Description          |
-| -------- | -------------------- |
-| `div`    | Division element     |
-| `span`   | Inline container     |
-| `table`  | HTML table structure |
-| `thead`  | Table header group   |
-| `tbody`  | Table body group     |
-| `tr`     | Table row            |
-| `td`     | Table data cell      |
-| `th`     | Table header cell    |
-| `ul`     | Unordered list       |
-| `ol`     | Ordered list         |
-| `li`     | List item            |
-| `code`   | Code block           |
-| `em`     | Emphasized text      |
-| `strong` | Strong text          |
-| `a`      | Anchor/link          |
-| `img`    | Image                |
-
-You can customize HTML rendering by providing your own components:
-
-```typescript
-import type { HtmlRenderers } from '@humanspeak/svelte-diff-match-patch'
-
-const customHtmlRenderers: Partial<HtmlRenderers> = {
-    div: YourCustomDivComponent,
-    span: YourCustomSpanComponent
-}
-```
-
-## Events
-
-The component emits a `parsed` event when tokens are calculated:
-
-```svelte
-<script lang="ts">
-    import SvelteMarkdown from '@humanspeak/svelte-diff-match-patch'
-
-    const handleParsed = (tokens: Token[] | TokensList) => {
-        console.log('Parsed tokens:', tokens)
-    }
-</script>
-
-<SvelteMarkdown {source} parsed={handleParsed} />
 ```
 
 ## Props
 
-| Prop      | Type                    | Description                           |
-| --------- | ----------------------- | ------------------------------------- |
-| source    | `string \| Token[]`     | Markdown content or pre-parsed tokens |
-| renderers | `Partial<Renderers>`    | Custom component overrides            |
-| options   | `SvelteMarkdownOptions` | Marked parser configuration           |
-| isInline  | `boolean`               | Toggle inline parsing mode            |
+| Prop              | Type       | Default | Description                                    |
+| ----------------- | ---------- | ------- | ---------------------------------------------- |
+| originalText      | `string`   | -       | The original text to compare against           |
+| modifiedText      | `string`   | -       | The modified text to compare with original     |
+| timeout           | `number`   | 1       | Timeout in seconds for diff computation        |
+| cleanupSemantic   | `boolean`  | false   | Enable semantic cleanup for better readability |
+| cleanupEfficiency | `number`   | 4       | Efficiency cleanup level (0-4)                 |
+| onProcessing      | `function` | -       | Callback for timing and diff information       |
+| rendererClasses   | `object`   | -       | CSS classes for diff highlighting              |
 
-## Security
+## Events
 
-The package includes several security features:
+The component emits a `processing` event with timing and diff information:
 
-- XSS protection through HTML sanitization
-- Secure HTML parsing with HTMLParser2
-- Safe handling of HTML entities
-- Protection against malicious markdown injection
+```svelte
+<script lang="ts">
+    import type {
+        SvelteDiffMatchPatchTiming,
+        SvelteDiffMatchPatchDiff
+    } from '@humanspeak/svelte-diff-match-patch'
+
+    const onProcessing = (timing: SvelteDiffMatchPatchTiming, diff: SvelteDiffMatchPatchDiff) => {
+        console.log('Diff computation time:', timing.computeTime)
+        console.log('Cleanup time:', timing.cleanupTime)
+        console.log('Total changes:', diff.length)
+    }
+</script>
+
+<SvelteDiffMatchPatch {originalText} {modifiedText} {onProcessing} />
+```
+
+## Cleanup Algorithms
+
+### Semantic Cleanup
+
+When `cleanupSemantic` is enabled, the diff algorithm will:
+
+- Factor out commonalities that are likely to be coincidental
+- Improve human readability of the diff
+- May increase computation time for large texts
+
+### Efficiency Cleanup
+
+The `cleanupEfficiency` level (0-4) controls how aggressively the algorithm:
+
+- Factors out short commonalities
+- Reduces computational overhead
+- Higher values mean more aggressive cleanup
+
+## Performance Considerations
+
+- For large texts, consider increasing the `timeout` value
+- Use `cleanupSemantic` for better readability in small to medium texts
+- Use `cleanupEfficiency` for better performance in large texts
+- Monitor the `onProcessing` callback for timing information
 
 ## License
 
