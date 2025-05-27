@@ -49,7 +49,7 @@
         {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "Svelte Markdown",
+            "name": "Svelte Diff",
             "applicationCategory": "DeveloperApplication",
             "operatingSystem": "Any",
             "offers": {
@@ -63,7 +63,7 @@
                 "url": "https://humanspeak.com"
             },
             "programmingLanguage": ["Svelte", "TypeScript"],
-            "description": "A powerful markdown parser for Svelte 5 that transforms markdown into customizable Svelte components with TypeScript support and extensive testing coverage.",
+            "description": "A powerful diff parser for Svelte 5 that transforms text into diffs with TypeScript support and extensive testing coverage.",
             "license": "MIT",
             "url": "https://diff.svelte.page",
             "downloadUrl": "https://www.npmjs.com/package/@humanspeak/svelte-diff-match-patch",

@@ -36,21 +36,21 @@
             <div
                 class="flex flex-shrink-0 text-lg font-medium uppercase tracking-wider text-white/80"
             >
-                {type === 'og' ? 'High Performance Markdown Parser' : 'Markdown Parser Component'}
+                {type === 'og' ? 'High Performance Diff Parser' : 'Diff Parser Component'}
             </div>
             <h1
                 class:text-8xl={type === 'og'}
                 class:text-7xl={type === 'twitter'}
                 class="font-bold leading-tight tracking-tight"
             >
-                Svelte Markdown
+                Svelte Diff
             </h1>
             <p
                 class:text-4xl={type === 'og'}
                 class:text-3xl={type === 'twitter'}
                 class="max-w-3xl font-medium leading-relaxed text-white/90"
             >
-                Transform markdown into customizable Svelte components
+                Transform text into diffs
             </p>
         </div>
 
