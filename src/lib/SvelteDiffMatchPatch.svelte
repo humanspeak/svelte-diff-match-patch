@@ -36,13 +36,20 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
 @property {boolean} [cleanupSemantic=false] - If true, applies semantic cleanup for human readability
 @property {number} [cleanupEfficiency=4] - Edit cost for efficiency cleanup; higher values are more aggressive
 @property {function} [onProcessing] - Callback invoked after diff computation, receiving timing info ({ main, cleanup, total } in ms)
-@property {Partial<Renderers>} [renderers] - Custom Svelte snippets for rendering diff segments (remove, insert, equal, lineBreak)
-@property {RendererClasses} [rendererClasses] - Custom CSS classes for each diff type (remove, insert, equal); only works if renderers is not set
+@property {Partial<Renderers>} [renderers] - Custom Svelte snippets for rendering diff segments (remove, insert, equal, expected, lineBreak)
+@property {RendererClasses} [rendererClasses] - Custom CSS classes for each diff type (remove, insert, equal, expected); only works if renderers is not set
 -->
 
 <script lang="ts">
-    import { DiffMatchPatch, type Diff } from 'diff-match-patch-ts'
+    import { DiffMatchPatch } from 'diff-match-patch-ts'
     import type { SvelteDiffMatchPatchProps } from './index.js'
+    import {
+        type DisplayDiff,
+        parseExpectedPatterns,
+        extractCaptures,
+        tagExpectedRegions,
+        cleanTemplate
+    } from './expectedPatterns.js'
 
     const {
         originalText,
@@ -55,7 +62,7 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
         rendererClasses = {}
     }: SvelteDiffMatchPatchProps = $props()
 
-    let displayDiffs = $state<Diff[]>([])
+    let displayDiffs = $state<DisplayDiff[]>([])
     const dmp = $state<DiffMatchPatch>(new DiffMatchPatch())
 
     const computeDiff = (text1: string, text2: string) => {
@@ -64,8 +71,25 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
         // trunk-ignore(eslint/camelcase)
         dmp.Diff_EditCost = cleanupEfficiency
 
+        const parseResult = parseExpectedPatterns(text1)
+        let diffText1 = text1
+        let captures: Record<string, string> | undefined
+        let captureRanges: import('./expectedPatterns.js').CaptureRange[] = []
+
+        if (parseResult) {
+            const extractResult = extractCaptures(text1, text2, parseResult)
+            if (extractResult) {
+                diffText1 = extractResult.resolvedText
+                captures = extractResult.captures
+                captureRanges = extractResult.captureRangesInText2
+            } else {
+                // Regex didn't match — clean template so users see <name> not (?<name>...)
+                diffText1 = cleanTemplate(text1)
+            }
+        }
+
         const startTotal = performance.now()
-        const diffs = dmp.diff_main(text1, text2)
+        const diffs = dmp.diff_main(diffText1, text2)
         const endMain = performance.now()
 
         const startCleanup = performance.now()
@@ -81,8 +105,13 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
             cleanup: endTotal - startCleanup,
             total: endTotal - startTotal
         }
-        onProcessing?.(timing, diffs)
-        displayDiffs = diffs
+        onProcessing?.(timing, diffs, captures)
+
+        if (captureRanges.length > 0) {
+            displayDiffs = tagExpectedRegions(diffs as [number, string][], captureRanges)
+        } else {
+            displayDiffs = diffs.map(([operation, text]) => ({ operation, text }))
+        }
     }
 
     $effect(() => {
@@ -94,6 +123,7 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
             remove: removeFallback,
             insert: insertFallback,
             equal: equalFallback,
+            expected: expectedFallback,
             lineBreak: lineBreakFallback
         },
         ...renderers
@@ -101,8 +131,19 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
 </script>
 
 {#each displayDiffs as diff, index (index)}
-    {@const [operation, text] = diff}
-    {#if text.includes('\n')}
+    {@const { operation, text, expected } = diff}
+    {#if expected}
+        {#if text.includes('\n')}
+            {#each text.split('\n') as line, lineIndex (lineIndex)}
+                {#if lineIndex > 0}{@render displayRenderers.lineBreak()}{/if}{#if line.length > 0}{@render displayRenderers.expected(
+                        line,
+                        expected
+                    )}{/if}
+            {/each}
+        {:else}
+            {@render displayRenderers.expected(text, expected)}
+        {/if}
+    {:else if text.includes('\n')}
         {#each text.split('\n') as line, lineIndex (lineIndex)}
             {#if lineIndex > 0}{@render displayRenderers.lineBreak()}{/if}{#if line.length > 0}{@const renderer =
                     operation === 0
@@ -137,6 +178,16 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
 
 {#snippet equalFallback(text: string)}
     <span class={rendererClasses.equal}>{text}</span>
+{/snippet}
+
+{#snippet expectedFallback(text: string, groupName: string)}
+    <span
+        class={rendererClasses.expected}
+        style={rendererClasses.expected
+            ? ''
+            : 'background-color: #dbeafe; border-bottom: 1px dashed #3b82f6;'}
+        title={groupName}>{text}</span
+    >
 {/snippet}
 
 {#snippet lineBreakFallback()}
