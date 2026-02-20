@@ -94,11 +94,10 @@ export interface SvelteDiffMatchPatchProps {
      * <SvelteDiffMatchPatch onProcessing={handleTiming} ... />
      * ```
      */
-    /* trunk-ignore(eslint/no-unused-vars) */
     onProcessing?: (
-        timing: SvelteDiffMatchPatchTiming,
-        diffs: SvelteDiffMatchPatchDiff[],
-        captures?: Record<string, string>
+        _timing: SvelteDiffMatchPatchTiming,
+        _diffs: SvelteDiffMatchPatchDiff[],
+        _captures?: Record<string, string>
     ) => void
     /**
      * Custom Svelte snippets for rendering diff segments.
