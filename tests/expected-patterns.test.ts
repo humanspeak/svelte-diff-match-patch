@@ -17,15 +17,10 @@ test.describe('Expected Patterns', () => {
     })
 
     test('non-captured deviations still show as insert/remove', async ({ page }) => {
-        // Use a simple template where we can have both expected captures and deviations
-        await page.getByTestId('text1').fill('Hello (?<name>.+) end')
-        await page.getByTestId('text2').fill('Goodbye World end')
-        // "World" is captured as expected, but "Hello" vs "Goodbye" is a real deviation
-        // Actually regex won't match because "Hello" != "Goodbye" literal...
-        // Use: template matches but has surrounding diffs from diff algorithm
-        await page.getByTestId('text1').fill('(?<name>.+) likes coding')
+        // Use \w+ instead of .+ so the capture is constrained to "Jason" only,
+        // leaving "coding" vs "hacking" as a real deviation for insert/remove
+        await page.getByTestId('text1').fill('(?<name>\\w+) likes coding')
         await page.getByTestId('text2').fill('Jason likes hacking')
-        // "Jason" is captured, "coding" vs "hacking" is a real deviation
         await expect(
             page.getByTestId('diff-result').locator('.diff-expected').first()
         ).toBeVisible()
