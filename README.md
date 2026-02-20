@@ -27,11 +27,13 @@ A powerful, customizable diff-match-patch component for Svelte with TypeScript s
 - 📊 Detailed timing and diff statistics
 - 🎨 Customizable diff highlighting styles
 - 🔍 Real-time diff updates
+- 🎯 Expected patterns — mark dynamic regions (dates, names) as "expected" instead of diffs
 
 ## Recent Updates
 
 ### New Features
 
+- Expected patterns — use named regex capture groups to mark dynamic regions as "expected" instead of diffs
 - Added detailed timing information for diff operations
 - Enhanced cleanup algorithms for better diff results
 - Improved performance for large text comparisons
@@ -127,6 +129,7 @@ import type {
 | cleanupEfficiency | `number`   | 4       | Efficiency cleanup level (0-4)                 |
 | onProcessing      | `function` | -       | Callback for timing and diff information       |
 | rendererClasses   | `object`   | -       | CSS classes for diff highlighting              |
+| renderers         | `object`   | -       | Custom Svelte snippets for rendering           |
 
 ## Custom Rendering with Snippets
 
@@ -191,6 +194,87 @@ You can use these snippets to:
 - Add tooltips or other interactive elements
 
 If you don't provide snippets, the component will use the default rendering with the `rendererClasses` prop.
+
+## Expected Patterns
+
+Sometimes parts of your text are _supposed_ to differ — like the year and copyright holder in a license file. Expected patterns let you mark these dynamic regions with named regex capture groups so they render with distinct "expected" styling instead of showing up as noisy red/green diffs.
+
+Use standard `(?<name>pattern)` syntax directly in your `originalText`:
+
+```svelte
+<SvelteDiffMatchPatch
+    originalText={`Copyright (?<year>\\d{4}) (?<holder>.+)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:`}
+    modifiedText={`MIT License
+
+Copyright (c) 2024 Humanspeak, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:`}
+    cleanupSemantic={true}
+    rendererClasses={{
+        remove: 'diff-remove',
+        insert: 'diff-insert',
+        equal: 'diff-equal',
+        expected: 'diff-expected'
+    }}
+/>
+
+<style>
+    :global(.diff-expected) {
+        background-color: #dbeafe;
+        border-bottom: 1px dashed #3b82f6;
+    }
+</style>
+```
+
+In this example:
+
+- `2024` renders with blue "expected" styling (matched `(?<year>\d{4})`)
+- `Humanspeak, Inc.` renders as expected (matched `(?<holder>.+)`)
+- `MIT License` and `(c)` show as normal green inserts — they're real differences
+- Everything else is equal
+
+The matching is flexible — extra content like headers or `(c)` symbols between the template anchor and the capture group won't break the match.
+
+### Accessing Captured Values
+
+The `onProcessing` callback receives captured values as its third argument:
+
+```svelte
+<script lang="ts">
+    const onProcessing = (timing, diffs, captures) => {
+        // captures?.year === "2024"
+        // captures?.holder === "Humanspeak, Inc."
+    }
+</script>
+```
+
+### Available Snippets for Expected Regions
+
+| Snippet  | Parameters          | Description                                     |
+| -------- | ------------------- | ----------------------------------------------- |
+| expected | `text`, `groupName` | Renders matched capture regions with group name |
+
+```svelte
+<SvelteDiffMatchPatch {originalText} {modifiedText}>
+    {#snippet expected(text: string, groupName: string)}
+        <span class="expected" title={groupName}>{text}</span>
+    {/snippet}
+</SvelteDiffMatchPatch>
+```
+
+If no capture groups are present in `originalText`, the component behaves exactly as before — no changes needed to existing code.
 
 ## Events
 
