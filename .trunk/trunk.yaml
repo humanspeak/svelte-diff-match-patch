@@ -24,6 +24,9 @@ lint:
         - linters: [markdownlint]
           paths:
               - .changeset/**
+        - linters: [eslint]
+          paths:
+              - '**/*.svelte.ts'
     definitions:
         - name: prettier
           files:
