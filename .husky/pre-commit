@@ -1,0 +1,48 @@
+#!/bin/sh
+
+set -eu
+
+# Resolve trunk binary and allow continuing without it (avoid PATH assumptions)
+TRUNK_BIN=$(command -v trunk 2>/dev/null || true)
+if [ -z "${TRUNK_BIN}" ]; then
+	echo "⚠️  'trunk' CLI not found; skipping formatting and lint checks."
+	echo "   Install with 'brew install trunk-io' or see https://docs.trunk.io for setup."
+else
+	# Capture initially staged files to preserve user's intent
+	INITIAL_STAGED=$(git diff --cached --name-only || true)
+
+	# Format files without force‑adding unrelated changes
+	echo "✨ Formatting code..."
+	if ! "${TRUNK_BIN}" fmt >/dev/null 2>&1; then
+		echo "❌ Code formatting failed. Run 'trunk fmt' to see details."
+		exit 1
+	fi
+	if [ -n "${INITIAL_STAGED}" ]; then
+		echo "Restaging originally staged files after formatting..."
+		for f in ${INITIAL_STAGED}; do
+			git add --update -- "${f}" 2>/dev/null || true
+		done
+	fi
+
+	# Lint with auto-fix and re-stage only originally staged files
+	echo "🔍 Running linter checks..."
+	if ! "${TRUNK_BIN}" check --fix >/dev/null 2>&1; then
+		echo "❌ Linting failed. Run 'trunk check' to see errors and fix them."
+		exit 1
+	fi
+	if [ -n "${INITIAL_STAGED}" ]; then
+		echo "Restaging originally staged files after lint fixes..."
+		for f in ${INITIAL_STAGED}; do
+			git add --update -- "${f}" 2>/dev/null || true
+		done
+	fi
+fi
+
+# Run type and Svelte checks to catch TS/Svelte typing regressions
+echo "🧪 Running svelte-check..."
+if ! pnpm run -s check >/dev/null 2>&1; then
+	echo "❌ Type/Svelte checks failed. Run 'pnpm run check' to see details."
+	exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"

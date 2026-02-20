@@ -109,6 +109,21 @@ From wicked puns and stupid jokes to anvils that drop on your head.`)
         </div>
     </div>
 
+    <div class="border rounded p-4 bg-gray-50 mb-6">
+        <h3 class="text-lg font-medium mb-2">Other Demos:</h3>
+        <ul class="list-disc list-inside space-y-1">
+            <li>
+                <a href="/tests/snippets" class="text-blue-600 underline">Snippets rendering demo</a
+                >
+            </li>
+            <li>
+                <a href="/tests/expected-patterns" class="text-blue-600 underline"
+                    >Expected patterns demo</a
+                >
+            </li>
+        </ul>
+    </div>
+
     <div class="border rounded p-4 bg-white">
         <h3 class="text-lg font-medium mb-2">Diff Result:</h3>
         <div data-testid="diff-result" class="prose max-w-none">
@@ -121,7 +136,8 @@ From wicked puns and stupid jokes to anvils that drop on your head.`)
                 rendererClasses={{
                     remove: 'diff-remove',
                     insert: 'diff-insert',
-                    equal: 'diff-equal'
+                    equal: 'diff-equal',
+                    expected: 'diff-expected'
                 }}
             />
         </div>
@@ -135,5 +151,9 @@ From wicked puns and stupid jokes to anvils that drop on your head.`)
     }
     :global(.diff-insert) {
         background-color: #d4ffd4;
+    }
+    :global(.diff-expected) {
+        background-color: #dbeafe;
+        border-bottom: 1px dashed #3b82f6;
     }
 </style>

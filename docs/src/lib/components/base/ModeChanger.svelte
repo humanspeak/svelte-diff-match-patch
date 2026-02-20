@@ -21,7 +21,7 @@
         </Tooltip.Root>
     </DropdownMenu.Trigger>
     <DropdownMenu.Content align="end">
-        <DropdownMenu.RadioGroup value={userPrefersMode.value || 'system'}>
+        <DropdownMenu.RadioGroup value={userPrefersMode.current || 'system'}>
             <DropdownMenu.RadioItem value="light" onclick={() => setMode('light')}>
                 Light
             </DropdownMenu.RadioItem>

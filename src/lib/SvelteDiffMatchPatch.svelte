@@ -1,48 +1,70 @@
 <!--
 @component
 
-A Svelte component that visually compares two strings and renders their differences using the diff-match-patch algorithm.
-Supports character-level diffing, semantic and efficiency cleanup, custom rendering via Svelte snippets, and flexible styling.
+A Svelte 5 component that visually compares two strings using the diff-match-patch algorithm.
 
-@example
+Supports character-level diffing, semantic and efficiency cleanup, custom rendering via Svelte snippets, and flexible CSS-class styling.
+
+### Expected Patterns
+
+When `originalText` contains named capture groups like `(?<year>\\d{4})`, the component
+extracts matching values from `modifiedText` and renders them with distinct "expected"
+styling instead of normal insert/remove colors. This is useful for templates where
+certain dynamic regions (dates, names, versions) are expected to differ.
+
+@example Basic usage with CSS classes
 ```svelte
 <SvelteDiffMatchPatch
   originalText={oldValue}
   modifiedText={newValue}
-  timeout={2}
   cleanupSemantic={true}
-  cleanupEfficiency={4}
   rendererClasses={{
     remove: 'bg-red-100 text-red-800',
     insert: 'bg-green-100 text-green-800',
     equal: 'text-gray-700'
   }}
 />
+```
 
-<SvelteDiffMatchPatch
-  originalText={a}
-  modifiedText={b}
->
-  {#snippet remove(text: string)}<span class="my-remove">{text}</span>{/snippet}
-  {#snippet insert(text: string)}<span class="my-insert">{text}</span>{/snippet}
-  {#snippet equal(text: string)}<span class="my-equal">{text}</span>{/snippet}
+@example Custom snippet rendering
+```svelte
+<SvelteDiffMatchPatch originalText={a} modifiedText={b}>
+  {#snippet remove(text)}<del class="diff-remove">{text}</del>{/snippet}
+  {#snippet insert(text)}<ins class="diff-insert">{text}</ins>{/snippet}
+  {#snippet equal(text)}<span>{text}</span>{/snippet}
+  {#snippet expected(text, groupName)}<mark title={groupName}>{text}</mark>{/snippet}
   {#snippet lineBreak()}<br />{/snippet}
 </SvelteDiffMatchPatch>
 ```
 
-@property {string} originalText - The original (left-side) string to compare (the "before" or source text)
+@example Expected patterns (named capture groups)
+```svelte
+<SvelteDiffMatchPatch
+  originalText={'Copyright (?<year>\\d{4}) (?<holder>.+)'}
+  modifiedText={'Copyright 2024 Jason Kummerl'}
+/>
+```
+
+@property {string} originalText - The original (left-side) string to compare (the "before" or source text). May contain `(?<name>pattern)` capture groups for expected-pattern matching.
 @property {string} modifiedText - The modified (right-side) string to compare (the "after" or target text)
 @property {number} [timeout=1] - Maximum time in seconds to spend computing the diff (0 for unlimited)
 @property {boolean} [cleanupSemantic=false] - If true, applies semantic cleanup for human readability
 @property {number} [cleanupEfficiency=4] - Edit cost for efficiency cleanup; higher values are more aggressive
-@property {function} [onProcessing] - Callback invoked after diff computation, receiving timing info ({ main, cleanup, total } in ms)
-@property {Partial<Renderers>} [renderers] - Custom Svelte snippets for rendering diff segments (remove, insert, equal, lineBreak)
-@property {RendererClasses} [rendererClasses] - Custom CSS classes for each diff type (remove, insert, equal); only works if renderers is not set
+@property {function} [onProcessing] - Callback invoked after diff computation, receiving `(timing, diffs, captures?)`. The `captures` argument is a `Record<string, string>` when expected patterns match.
+@property {Partial<Renderers>} [renderers] - Custom Svelte snippets for rendering diff segments: `remove`, `insert`, `equal`, `expected`, and `lineBreak`
+@property {RendererClasses} [rendererClasses] - Custom CSS classes for each diff type: `remove`, `insert`, `equal`, `expected`. Only effective when `renderers` is not set.
 -->
 
 <script lang="ts">
-    import { DiffMatchPatch, type Diff } from 'diff-match-patch-ts'
+    import { DiffMatchPatch } from 'diff-match-patch-ts'
     import type { SvelteDiffMatchPatchProps } from './index.js'
+    import {
+        type DisplayDiff,
+        parseExpectedPatterns,
+        extractCaptures,
+        tagExpectedRegions,
+        cleanTemplate
+    } from './expectedPatterns.js'
 
     const {
         originalText,
@@ -55,7 +77,7 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
         rendererClasses = {}
     }: SvelteDiffMatchPatchProps = $props()
 
-    let displayDiffs = $state<Diff[]>([])
+    let displayDiffs = $state<DisplayDiff[]>([])
     const dmp = $state<DiffMatchPatch>(new DiffMatchPatch())
 
     const computeDiff = (text1: string, text2: string) => {
@@ -64,8 +86,25 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
         // trunk-ignore(eslint/camelcase)
         dmp.Diff_EditCost = cleanupEfficiency
 
+        const parseResult = parseExpectedPatterns(text1)
+        let diffText1 = text1
+        let captures: Record<string, string> | undefined
+        let captureRanges: import('./expectedPatterns.js').CaptureRange[] = []
+
+        if (parseResult) {
+            const extractResult = extractCaptures(text1, text2, parseResult)
+            if (extractResult) {
+                diffText1 = extractResult.resolvedText
+                captures = extractResult.captures
+                captureRanges = extractResult.captureRangesInText2
+            } else {
+                // Regex didn't match — clean template so users see <name> not (?<name>...)
+                diffText1 = cleanTemplate(text1)
+            }
+        }
+
         const startTotal = performance.now()
-        const diffs = dmp.diff_main(text1, text2)
+        const diffs = dmp.diff_main(diffText1, text2)
         const endMain = performance.now()
 
         const startCleanup = performance.now()
@@ -81,8 +120,13 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
             cleanup: endTotal - startCleanup,
             total: endTotal - startTotal
         }
-        onProcessing?.(timing, diffs)
-        displayDiffs = diffs
+        onProcessing?.(timing, diffs, captures)
+
+        if (captureRanges.length > 0) {
+            displayDiffs = tagExpectedRegions(diffs as [number, string][], captureRanges)
+        } else {
+            displayDiffs = diffs.map(([operation, text]) => ({ operation, text }))
+        }
     }
 
     $effect(() => {
@@ -94,6 +138,7 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
             remove: removeFallback,
             insert: insertFallback,
             equal: equalFallback,
+            expected: expectedFallback,
             lineBreak: lineBreakFallback
         },
         ...renderers
@@ -101,8 +146,19 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
 </script>
 
 {#each displayDiffs as diff, index (index)}
-    {@const [operation, text] = diff}
-    {#if text.includes('\n')}
+    {@const { operation, text, expected } = diff}
+    {#if expected}
+        {#if text.includes('\n')}
+            {#each text.split('\n') as line, lineIndex (lineIndex)}
+                {#if lineIndex > 0}{@render displayRenderers.lineBreak()}{/if}{#if line.length > 0}{@render displayRenderers.expected(
+                        line,
+                        expected
+                    )}{/if}
+            {/each}
+        {:else}
+            {@render displayRenderers.expected(text, expected)}
+        {/if}
+    {:else if text.includes('\n')}
         {#each text.split('\n') as line, lineIndex (lineIndex)}
             {#if lineIndex > 0}{@render displayRenderers.lineBreak()}{/if}{#if line.length > 0}{@const renderer =
                     operation === 0
@@ -137,6 +193,16 @@ Supports character-level diffing, semantic and efficiency cleanup, custom render
 
 {#snippet equalFallback(text: string)}
     <span class={rendererClasses.equal}>{text}</span>
+{/snippet}
+
+{#snippet expectedFallback(text: string, groupName: string)}
+    <span
+        class={rendererClasses.expected}
+        style={rendererClasses.expected
+            ? ''
+            : 'background-color: #dbeafe; border-bottom: 1px dashed #3b82f6;'}
+        title={groupName}>{text}</span
+    >
 {/snippet}
 
 {#snippet lineBreakFallback()}

@@ -24,9 +24,7 @@ export default [
             '**/pnpm-lock.yaml',
             '**/package-lock.json',
             '**/yarn.lock',
-            'src/routes/poc',
             '**/dist',
-            'docs/',
             '**/*.test.ts'
         ]
     },
@@ -37,6 +35,9 @@ export default [
     ...svelte.configs['flat/prettier'],
     {
         languageOptions: {
+            parserOptions: {
+                tsconfigRootDir: import.meta.dirname
+            },
             globals: {
                 ...globals.browser,
                 ...globals.node
@@ -44,7 +45,6 @@ export default [
         },
         rules: {
             semi: ['warn', 'never'],
-            quotes: ['error', 'single'],
             'dot-location': ['warn', 'property'],
             'guard-for-in': ['warn'],
             'no-multi-spaces': ['warn'],
@@ -92,11 +92,35 @@ export default [
         }
     },
     {
-        files: ['**/*.svelte'],
+        files: ['**/*.svelte', '**/*.svelte.ts'],
         languageOptions: {
             parserOptions: {
                 parser: ts.parser
             }
+        },
+        rules: {
+            'prefer-const': ['off'],
+            'svelte/no-navigation-without-resolve': ['off'] // Allow external links
+        }
+    },
+    {
+        /* location of your components where you would like to apply these rules  */
+        files: ['**/shadcn/components/ui/**/*.svelte', '**/shadcn/components/ui/**/*.ts'],
+        languageOptions: {
+            parserOptions: {
+                parser: ts.parser
+            }
+        },
+        rules: {
+            '@typescript-eslint/no-unused-vars': [
+                'warn',
+                {
+                    argsIgnorePattern: '^_',
+                    varsIgnorePattern: '^\\$\\$(Props|Events|Slots|Generic)$'
+                }
+            ],
+            'prefer-const': ['off'],
+            'no-unused-vars': ['off']
         }
     }
 ]

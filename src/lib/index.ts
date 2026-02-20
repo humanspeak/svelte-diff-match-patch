@@ -3,18 +3,90 @@ import type { Snippet } from 'svelte'
 import SvelteDiffMatchPatch from './SvelteDiffMatchPatch.svelte'
 
 export default SvelteDiffMatchPatch
+export type { CaptureRange, DisplayDiff, PatternMatchResult } from './expectedPatterns.js'
+/**
+ * Custom Svelte 5 snippets for rendering each diff segment type.
+ *
+ * When provided via the `renderers` prop, these snippets replace the
+ * component's default `<span>` rendering entirely — you control the
+ * markup and styling for every segment.
+ *
+ * @example
+ * ```svelte
+ * <SvelteDiffMatchPatch originalText={a} modifiedText={b}>
+ *   {#snippet remove(text)}<del>{text}</del>{/snippet}
+ *   {#snippet insert(text)}<ins>{text}</ins>{/snippet}
+ *   {#snippet equal(text)}<span>{text}</span>{/snippet}
+ *   {#snippet expected(text, groupName)}<mark title={groupName}>{text}</mark>{/snippet}
+ *   {#snippet lineBreak()}<br />{/snippet}
+ * </SvelteDiffMatchPatch>
+ * ```
+ */
 export type Renderers = {
+    /** Renders a **removed** (deleted) text segment. Receives the removed text. */
     remove?: Snippet<[string]>
+    /** Renders an **equal** (unchanged) text segment. Receives the unchanged text. */
     equal?: Snippet<[string]>
+    /** Renders an **inserted** (added) text segment. Receives the inserted text. */
     insert?: Snippet<[string]>
+    /** Renders an **expected** text segment (matched a named capture group). Receives `(text, groupName)`. */
+    expected?: Snippet<[string, string]>
+    /** Renders a line break between diff lines. Receives no arguments. */
     lineBreak?: Snippet<[]>
 }
+
+/**
+ * CSS class overrides for each diff segment type.
+ *
+ * A simpler alternative to full `renderers` — the component still renders
+ * its default `<span>` elements but applies your class strings instead of
+ * inline styles. Only effective when `renderers` is **not** provided.
+ *
+ * @example
+ * ```svelte
+ * <SvelteDiffMatchPatch
+ *   originalText={a}
+ *   modifiedText={b}
+ *   rendererClasses={{
+ *     remove: 'bg-red-100 line-through',
+ *     insert: 'bg-green-100',
+ *     equal: 'text-gray-700',
+ *     expected: 'bg-blue-100 border-b border-dashed border-blue-500'
+ *   }}
+ * />
+ * ```
+ */
 export type RendererClasses = {
+    /** CSS class for **removed** (deleted) text segments. */
     remove?: string
+    /** CSS class for **equal** (unchanged) text segments. */
     equal?: string
+    /** CSS class for **inserted** (added) text segments. */
     insert?: string
+    /** CSS class for **expected** text segments (matched named capture groups). */
+    expected?: string
 }
-export type SvelteDiffMatchPatchTiming = { main: number; cleanup: number; total: number }
+
+/**
+ * Timing information from a diff computation, in milliseconds.
+ *
+ * Passed as the first argument to the {@link SvelteDiffMatchPatchProps.onProcessing | onProcessing} callback.
+ */
+export type SvelteDiffMatchPatchTiming = {
+    /** Time spent in the core `diff_main` algorithm (ms). */
+    main: number
+    /** Time spent in semantic or efficiency cleanup (ms). */
+    cleanup: number
+    /** Total wall-clock time for the entire diff operation (ms). */
+    total: number
+}
+
+/**
+ * A single diff tuple from the diff-match-patch algorithm.
+ *
+ * Re-exported from `diff-match-patch-ts` for convenience.
+ * Each tuple is `[operation, text]` where operation is `-1` (remove), `0` (equal), or `1` (insert).
+ */
 export type SvelteDiffMatchPatchDiff = Diff
 export interface SvelteDiffMatchPatchProps {
     /**
@@ -77,22 +149,30 @@ export interface SvelteDiffMatchPatchProps {
      */
     cleanupEfficiency?: number
     /**
-     * Callback invoked after diff computation, receiving timing information.
+     * Callback invoked after diff computation with timing, diffs, and optional captures.
      *
-     * The callback receives an object: `{ main, cleanup, total }` (all in milliseconds).
+     * @param timing - `{ main, cleanup, total }` in milliseconds.
+     * @param diffs - The raw diff tuples from diff-match-patch.
+     * @param captures - When expected patterns match, a `Record<string, string>` mapping
+     *   group names to their captured values (e.g., `{ year: "2024", holder: "Jason" }`).
      *
      * ## Example
-     * ```ts
-     * function handleTiming(timing) {
-     *   console.log('Diff timing:', timing);
-     * }
-     * ```
      * ```svelte
-     * <SvelteDiffMatchPatch onProcessing={handleTiming} ... />
+     * <SvelteDiffMatchPatch
+     *   originalText={template}
+     *   modifiedText={actual}
+     *   onProcessing={(timing, diffs, captures) => {
+     *     console.log(`Diff took ${timing.total}ms`);
+     *     if (captures) console.log('Matched:', captures);
+     *   }}
+     * />
      * ```
      */
-    /* trunk-ignore(eslint/no-unused-vars) */
-    onProcessing?: (timing: SvelteDiffMatchPatchTiming, diffs: SvelteDiffMatchPatchDiff[]) => void
+    onProcessing?: (
+        _timing: SvelteDiffMatchPatchTiming,
+        _diffs: SvelteDiffMatchPatchDiff[],
+        _captures?: Record<string, string>
+    ) => void
     /**
      * Custom Svelte snippets for rendering diff segments.
      *

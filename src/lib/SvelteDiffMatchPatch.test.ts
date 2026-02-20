@@ -70,3 +70,82 @@ describe('SvelteDiffMatchPatch component', () => {
         ).not.toThrow()
     })
 })
+
+describe('SvelteDiffMatchPatch expected patterns', () => {
+    it('renders expected regions with default styling and title attribute', () => {
+        const { container } = render(SvelteDiffMatchPatch, {
+            originalText: 'Copyright (?<year>\\d{4}) MIT',
+            modifiedText: 'Copyright 2024 MIT'
+        })
+        const expectedSpan = container.querySelector('span[title="year"]')
+        expect(expectedSpan).toBeTruthy()
+        expect(expectedSpan!.textContent).toBe('2024')
+        expect(expectedSpan!.getAttribute('style')).toContain('background-color')
+    })
+
+    it('falls back to normal diff with cleaned template when regex does not match', () => {
+        const { container } = render(SvelteDiffMatchPatch, {
+            originalText: 'Copyright (?<year>\\d{4}) MIT',
+            modifiedText: 'completely different text'
+        })
+        const expectedSpan = container.querySelector('span[title="year"]')
+        expect(expectedSpan).toBeNull()
+        // Should show cleaned placeholder <year>, not raw (?<year>\\d{4})
+        expect(container.textContent).toContain('<year>')
+        expect(container.textContent).not.toContain('(?<year>')
+    })
+
+    it('renders expected regions even when text2 has extra content (partial match)', () => {
+        const { container } = render(SvelteDiffMatchPatch, {
+            originalText: 'Copyright (?<year>\\d{4}) (?<holder>.+)',
+            modifiedText: 'MIT License\n\nCopyright (c) 2024 Jason Kummerl'
+        })
+        // "2024" should be tagged as expected with title="year"
+        const yearSpan = container.querySelector('span[title="year"]')
+        expect(yearSpan).toBeTruthy()
+        expect(yearSpan!.textContent).toBe('2024')
+
+        // "Jason Kummerl" should be tagged as expected with title="holder"
+        const holderSpan = container.querySelector('span[title="holder"]')
+        expect(holderSpan).toBeTruthy()
+        expect(holderSpan!.textContent).toBe('Jason Kummerl')
+    })
+
+    it('passes captures to onProcessing as 3rd arg', async () => {
+        const onProcessing = vi.fn()
+        render(SvelteDiffMatchPatch, {
+            originalText: 'Copyright (?<year>\\d{4}) MIT',
+            modifiedText: 'Copyright 2024 MIT',
+            onProcessing
+        })
+        await waitFor(() => {
+            expect(onProcessing).toHaveBeenCalled()
+        })
+        const captures = onProcessing.mock.calls[0][2]
+        expect(captures).toBeDefined()
+        expect(captures.year).toBe('2024')
+    })
+
+    it('applies rendererClasses.expected with title still present', () => {
+        const { container } = render(SvelteDiffMatchPatch, {
+            originalText: 'Copyright (?<year>\\d{4}) MIT',
+            modifiedText: 'Copyright 2024 MIT',
+            rendererClasses: { expected: 'test-expected' }
+        })
+        const expectedSpan = container.querySelector('.test-expected')
+        expect(expectedSpan).toBeTruthy()
+        expect(expectedSpan!.getAttribute('title')).toBe('year')
+    })
+
+    it('no change in behavior when no capture groups in originalText', () => {
+        const { container } = render(SvelteDiffMatchPatch, {
+            originalText: 'hello world',
+            modifiedText: 'hello brave world'
+        })
+        const expectedSpan = container.querySelector('span[title]')
+        // No title attributes should be present (no expected regions)
+        const titledSpans = container.querySelectorAll('span[title]')
+        expect(titledSpans.length).toBe(0)
+        expect(container.textContent).toContain('brave')
+    })
+})
