@@ -43,7 +43,6 @@
 ### Dependencies
 
 - Core Dependencies:
-
     - diff-match-patch-ts: ^0.6.0
 
 - Peer Dependencies:
@@ -84,7 +83,6 @@
 ### Edge Case Handling
 
 - Input Validation
-
     - Empty text inputs
     - Non-string inputs
     - Extremely long texts
@@ -92,7 +90,6 @@
     - Zero-width spaces
 
 - Component Behavior
-
     - Real-time updates
     - Performance optimization
     - Memory management
