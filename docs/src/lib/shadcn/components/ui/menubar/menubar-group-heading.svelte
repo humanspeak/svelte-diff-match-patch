@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { cn } from "$lib/shadcn/utils.js";
-	import { Menubar as MenubarPrimitive } from "bits-ui";
-	import type { ComponentProps } from "svelte";
+	import { cn } from "$lib/shadcn/utils.js"
+	import { Menubar as MenubarPrimitive } from "bits-ui"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -10,7 +10,7 @@
 		...restProps
 	}: ComponentProps<typeof MenubarPrimitive.GroupHeading> & {
 		inset?: boolean;
-	} = $props();
+	} = $props()
 </script>
 
 <MenubarPrimitive.GroupHeading

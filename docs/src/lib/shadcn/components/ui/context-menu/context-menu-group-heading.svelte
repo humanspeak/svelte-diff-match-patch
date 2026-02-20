@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { ContextMenu as ContextMenuPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -9,7 +9,7 @@
 		...restProps
 	}: ContextMenuPrimitive.GroupHeadingProps & {
 		inset?: boolean;
-	} = $props();
+	} = $props()
 </script>
 
 <ContextMenuPrimitive.GroupHeading

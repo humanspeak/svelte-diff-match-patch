@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
-	import type { ComponentProps } from "svelte";
+	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -10,7 +10,7 @@
 		...restProps
 	}: ComponentProps<typeof DropdownMenuPrimitive.GroupHeading> & {
 		inset?: boolean;
-	} = $props();
+	} = $props()
 </script>
 
 <DropdownMenuPrimitive.GroupHeading

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import * as FormPrimitive from "formsnap";
-	import { cn, type WithoutChild } from "$lib/shadcn/utils.js";
+	import * as FormPrimitive from "formsnap"
+	import { cn, type WithoutChild } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: WithoutChild<FormPrimitive.LegendProps> = $props();
+	}: WithoutChild<FormPrimitive.LegendProps> = $props()
 </script>
 
 <FormPrimitive.Legend

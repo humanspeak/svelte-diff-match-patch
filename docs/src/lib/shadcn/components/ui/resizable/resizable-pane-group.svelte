@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as ResizablePrimitive from "paneforge";
-	import { cn } from "$lib/shadcn/utils.js";
+	import * as ResizablePrimitive from "paneforge"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -9,7 +9,7 @@
 		...restProps
 	}: ResizablePrimitive.PaneGroupProps & {
 		this?: ResizablePrimitive.PaneGroup;
-	} = $props();
+	} = $props()
 </script>
 
 <ResizablePrimitive.PaneGroup

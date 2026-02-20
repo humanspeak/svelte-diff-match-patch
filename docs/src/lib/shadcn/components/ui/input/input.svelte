@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from "svelte/elements";
-	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
+	import type { HTMLInputAttributes, HTMLInputTypeAttribute } from "svelte/elements"
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js"
 
 	type InputType = Exclude<HTMLInputTypeAttribute, "file">;
 
@@ -17,7 +17,7 @@
 		class: className,
 		"data-slot": dataSlot = "input",
 		...restProps
-	}: Props = $props();
+	}: Props = $props()
 </script>
 
 {#if type === "file"}

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { ToggleGroup as ToggleGroupPrimitive } from "bits-ui";
-	import { getToggleGroupCtx } from "./toggle-group.svelte";
-	import { cn } from "$lib/shadcn/utils.js";
-	import { type ToggleVariants, toggleVariants } from "$lib/shadcn/components/ui/toggle/index.js";
+	import { ToggleGroup as ToggleGroupPrimitive } from "bits-ui"
+	import { getToggleGroupCtx } from "./toggle-group.svelte"
+	import { cn } from "$lib/shadcn/utils.js"
+	import { type ToggleVariants, toggleVariants } from "$lib/shadcn/components/ui/toggle/index.js"
 
 	let {
 		ref = $bindable(null),
@@ -11,9 +11,9 @@
 		size,
 		variant,
 		...restProps
-	}: ToggleGroupPrimitive.ItemProps & ToggleVariants = $props();
+	}: ToggleGroupPrimitive.ItemProps & ToggleVariants = $props()
 
-	const ctx = getToggleGroupCtx();
+	const ctx = getToggleGroupCtx()
 </script>
 
 <ToggleGroupPrimitive.Item

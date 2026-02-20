@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import { tv, type VariantProps } from "tailwind-variants";
+	import { tv, type VariantProps } from "tailwind-variants"
 	export const sheetVariants = tv({
 		base: "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-lg transition ease-in-out data-[state=closed]:duration-300 data-[state=open]:duration-500",
 		variants: {
@@ -13,19 +13,18 @@
 		defaultVariants: {
 			side: "right",
 		},
-	});
+	})
 
 	export type Side = VariantProps<typeof sheetVariants>["side"];
 </script>
 
 <script lang="ts">
-	import { Dialog as SheetPrimitive } from "bits-ui";
-	import XIcon from "@lucide/svelte/icons/x";
-	import type { Snippet } from "svelte";
-	import SheetPortal from "./sheet-portal.svelte";
-	import SheetOverlay from "./sheet-overlay.svelte";
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
-	import type { ComponentProps } from "svelte";
+	import { Dialog as SheetPrimitive } from "bits-ui"
+	import XIcon from "@lucide/svelte/icons/x"
+	import { type Snippet, type ComponentProps } from "svelte"
+	import SheetPortal from "./sheet-portal.svelte"
+	import SheetOverlay from "./sheet-overlay.svelte"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -38,7 +37,7 @@
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SheetPortal>>;
 		side?: Side;
 		children: Snippet;
-	} = $props();
+	} = $props()
 </script>
 
 <SheetPortal {...portalProps}>

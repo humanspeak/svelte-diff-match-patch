@@ -1,14 +1,14 @@
 <script lang="ts">
-	import { RangeCalendar as RangeCalendarPrimitive } from "bits-ui";
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
-	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
+	import { RangeCalendar as RangeCalendarPrimitive } from "bits-ui"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		value,
 		...restProps
-	}: WithoutChildrenOrChild<RangeCalendarPrimitive.YearSelectProps> = $props();
+	}: WithoutChildrenOrChild<RangeCalendarPrimitive.YearSelectProps> = $props()
 </script>
 
 <span

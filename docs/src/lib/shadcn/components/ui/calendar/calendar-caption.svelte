@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ComponentProps } from "svelte";
-	import type Calendar from "./calendar.svelte";
-	import CalendarMonthSelect from "./calendar-month-select.svelte";
-	import CalendarYearSelect from "./calendar-year-select.svelte";
-	import { DateFormatter, getLocalTimeZone, type DateValue } from "@internationalized/date";
+	import type { ComponentProps } from "svelte"
+	import type Calendar from "./calendar.svelte"
+	import CalendarMonthSelect from "./calendar-month-select.svelte"
+	import CalendarYearSelect from "./calendar-year-select.svelte"
+	import { DateFormatter, getLocalTimeZone, type DateValue } from "@internationalized/date"
 
 	let {
 		captionLayout,
@@ -25,18 +25,18 @@
 		placeholder: DateValue | undefined;
 		locale: string;
 		monthIndex: number;
-	} = $props();
+	} = $props()
 
 	function formatYear(date: DateValue) {
-		const dateObj = date.toDate(getLocalTimeZone());
-		if (typeof yearFormat === "function") return yearFormat(dateObj.getFullYear());
-		return new DateFormatter(locale, { year: yearFormat }).format(dateObj);
+		const dateObj = date.toDate(getLocalTimeZone())
+		if (typeof yearFormat === "function") return yearFormat(dateObj.getFullYear())
+		return new DateFormatter(locale, { year: yearFormat }).format(dateObj)
 	}
 
 	function formatMonth(date: DateValue) {
-		const dateObj = date.toDate(getLocalTimeZone());
-		if (typeof monthFormat === "function") return monthFormat(dateObj.getMonth() + 1);
-		return new DateFormatter(locale, { month: monthFormat }).format(dateObj);
+		const dateObj = date.toDate(getLocalTimeZone())
+		if (typeof monthFormat === "function") return monthFormat(dateObj.getMonth() + 1)
+		return new DateFormatter(locale, { month: monthFormat }).format(dateObj)
 	}
 </script>
 
@@ -46,10 +46,10 @@
 		{monthFormat}
 		value={month.month}
 		onchange={(e) => {
-			if (!placeholder) return;
-			const v = Number.parseInt(e.currentTarget.value);
-			const newPlaceholder = placeholder.set({ month: v });
-			placeholder = newPlaceholder.subtract({ months: monthIndex });
+			if (!placeholder) return
+			const v = Number.parseInt(e.currentTarget.value)
+			const newPlaceholder = placeholder.set({ month: v })
+			placeholder = newPlaceholder.subtract({ months: monthIndex })
 		}}
 	/>
 {/snippet}

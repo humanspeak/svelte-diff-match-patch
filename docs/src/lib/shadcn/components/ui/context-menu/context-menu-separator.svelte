@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { ContextMenu as ContextMenuPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: ContextMenuPrimitive.SeparatorProps = $props();
+	}: ContextMenuPrimitive.SeparatorProps = $props()
 </script>
 
 <ContextMenuPrimitive.Separator

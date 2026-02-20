@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
-	import { Skeleton } from "$lib/shadcn/components/ui/skeleton/index.js";
-	import type { HTMLAttributes } from "svelte/elements";
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js"
+	import { Skeleton } from "$lib/shadcn/components/ui/skeleton/index.js"
+	import type { HTMLAttributes } from "svelte/elements"
 
 	let {
 		ref = $bindable(null),
@@ -11,10 +11,10 @@
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLElement>> & {
 		showIcon?: boolean;
-	} = $props();
+	} = $props()
 
 	// Random width between 50% and 90%
-	const width = `${Math.floor(Math.random() * 40) + 50}%`;
+	const width = `${Math.floor(Math.random() * 40) + 50}%`
 </script>
 
 <div

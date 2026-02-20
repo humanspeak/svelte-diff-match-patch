@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Calendar as CalendarPrimitive } from "bits-ui";
-	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left";
-	import { buttonVariants, type ButtonVariant } from "$lib/shadcn/components/ui/button/index.js";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Calendar as CalendarPrimitive } from "bits-ui"
+	import ChevronLeftIcon from "@lucide/svelte/icons/chevron-left"
+	import { buttonVariants, type ButtonVariant } from "$lib/shadcn/components/ui/button/index.js"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -12,7 +12,7 @@
 		...restProps
 	}: CalendarPrimitive.PrevButtonProps & {
 		variant?: ButtonVariant;
-	} = $props();
+	} = $props()
 </script>
 
 {#snippet Fallback()}

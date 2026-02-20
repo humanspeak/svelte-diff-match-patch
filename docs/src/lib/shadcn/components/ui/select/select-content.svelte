@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { Select as SelectPrimitive } from "bits-ui";
-	import SelectPortal from "./select-portal.svelte";
-	import SelectScrollUpButton from "./select-scroll-up-button.svelte";
-	import SelectScrollDownButton from "./select-scroll-down-button.svelte";
-	import { cn, type WithoutChild } from "$lib/shadcn/utils.js";
-	import type { ComponentProps } from "svelte";
-	import type { WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
+	import { Select as SelectPrimitive } from "bits-ui"
+	import SelectPortal from "./select-portal.svelte"
+	import SelectScrollUpButton from "./select-scroll-up-button.svelte"
+	import SelectScrollDownButton from "./select-scroll-down-button.svelte"
+	import { cn, type WithoutChild, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -17,7 +16,7 @@
 		...restProps
 	}: WithoutChild<SelectPrimitive.ContentProps> & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof SelectPortal>>;
-	} = $props();
+	} = $props()
 </script>
 
 <SelectPortal {...portalProps}>

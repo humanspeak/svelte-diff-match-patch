@@ -1,23 +1,22 @@
 <script lang="ts">
-	import { Button } from "$lib/shadcn/components/ui/button/index.js";
-	import { cn } from "$lib/shadcn/utils.js";
-	import PanelLeftIcon from "@lucide/svelte/icons/panel-left";
-	import type { ComponentProps } from "svelte";
-	import { useSidebar } from "./context.svelte.js";
+	import { Button } from "$lib/shadcn/components/ui/button/index.js"
+	import { cn } from "$lib/shadcn/utils.js"
+	import PanelLeftIcon from "@lucide/svelte/icons/panel-left"
+	import type { ComponentProps } from "svelte"
+	import { useSidebar } from "./context.svelte.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		onclick,
 		...restProps
-	}: ComponentProps<typeof Button> & {
-		onclick?: (e: MouseEvent) => void;
-	} = $props();
+	}: ComponentProps<typeof Button> = $props()
 
-	const sidebar = useSidebar();
+	const sidebar = useSidebar()
 </script>
 
 <Button
+	bind:ref
 	data-sidebar="trigger"
 	data-slot="sidebar-trigger"
 	variant="ghost"
@@ -25,8 +24,8 @@
 	class={cn("size-7", className)}
 	type="button"
 	onclick={(e) => {
-		onclick?.(e);
-		sidebar.toggle();
+		onclick?.(e)
+		sidebar.toggle()
 	}}
 	{...restProps}
 >

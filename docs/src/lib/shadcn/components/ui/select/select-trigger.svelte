@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Select as SelectPrimitive } from "bits-ui";
-	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
-	import { cn, type WithoutChild } from "$lib/shadcn/utils.js";
+	import { Select as SelectPrimitive } from "bits-ui"
+	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down"
+	import { cn, type WithoutChild } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 		...restProps
 	}: WithoutChild<SelectPrimitive.TriggerProps> & {
 		size?: "sm" | "default";
-	} = $props();
+	} = $props()
 </script>
 
 <SelectPrimitive.Trigger

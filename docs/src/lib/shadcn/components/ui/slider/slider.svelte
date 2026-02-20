@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Slider as SliderPrimitive } from "bits-ui";
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
+	import { Slider as SliderPrimitive } from "bits-ui"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -8,7 +8,7 @@
 		orientation = "horizontal",
 		class: className,
 		...restProps
-	}: WithoutChildrenOrChild<SliderPrimitive.RootProps> = $props();
+	}: WithoutChildrenOrChild<SliderPrimitive.RootProps> = $props()
 </script>
 
 <!--

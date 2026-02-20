@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
-	import ContextMenuPortal from "./context-menu-portal.svelte";
-	import type { ComponentProps } from "svelte";
-	import type { WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
+	import { ContextMenu as ContextMenuPrimitive } from "bits-ui"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import ContextMenuPortal from "./context-menu-portal.svelte"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -12,7 +11,7 @@
 		...restProps
 	}: ContextMenuPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof ContextMenuPortal>>;
-	} = $props();
+	} = $props()
 </script>
 
 <ContextMenuPortal {...portalProps}>

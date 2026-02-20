@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { Tabs as TabsPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Tabs as TabsPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		value = $bindable(""),
 		class: className,
 		...restProps
-	}: TabsPrimitive.RootProps = $props();
+	}: TabsPrimitive.RootProps = $props()
 </script>
 
 <TabsPrimitive.Root

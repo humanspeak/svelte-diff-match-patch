@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { cn } from "$lib/shadcn/utils.js";
-	import { Command as CommandPrimitive } from "bits-ui";
+	import { cn } from "$lib/shadcn/utils.js"
+	import { Command as CommandPrimitive } from "bits-ui"
 
 	export type CommandRootApi = CommandPrimitive.Root;
 
@@ -12,7 +12,7 @@
 		...restProps
 	}: CommandPrimitive.RootProps & {
 		api?: CommandRootApi | null;
-	} = $props();
+	} = $props()
 </script>
 
 <CommandPrimitive.Root

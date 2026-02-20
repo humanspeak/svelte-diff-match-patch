@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { Accordion as AccordionPrimitive } from "bits-ui";
-	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
-	import { cn, type WithoutChild } from "$lib/shadcn/utils.js";
+	import { Accordion as AccordionPrimitive } from "bits-ui"
+	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down"
+	import { cn, type WithoutChild } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 		...restProps
 	}: WithoutChild<AccordionPrimitive.TriggerProps> & {
 		level?: AccordionPrimitive.HeaderProps["level"];
-	} = $props();
+	} = $props()
 </script>
 
 <AccordionPrimitive.Header {level} class="flex">

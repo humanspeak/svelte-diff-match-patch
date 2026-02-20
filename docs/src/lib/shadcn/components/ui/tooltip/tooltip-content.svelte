@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { Tooltip as TooltipPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
-	import TooltipPortal from "./tooltip-portal.svelte";
-	import type { ComponentProps } from "svelte";
-	import type { WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
+	import { Tooltip as TooltipPrimitive } from "bits-ui"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import TooltipPortal from "./tooltip-portal.svelte"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -17,7 +16,7 @@
 	}: TooltipPrimitive.ContentProps & {
 		arrowClasses?: string;
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof TooltipPortal>>;
-	} = $props();
+	} = $props()
 </script>
 
 <TooltipPortal {...portalProps}>

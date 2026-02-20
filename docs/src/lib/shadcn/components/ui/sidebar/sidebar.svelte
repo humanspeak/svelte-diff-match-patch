@@ -1,9 +1,9 @@
 <script lang="ts">
-	import * as Sheet from "$lib/shadcn/components/ui/sheet/index.js";
-	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
-	import type { HTMLAttributes } from "svelte/elements";
-	import { SIDEBAR_WIDTH_MOBILE } from "./constants.js";
-	import { useSidebar } from "./context.svelte.js";
+	import * as Sheet from "$lib/shadcn/components/ui/sheet/index.js"
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js"
+	import type { HTMLAttributes } from "svelte/elements"
+	import { SIDEBAR_WIDTH_MOBILE } from "./constants.js"
+	import { useSidebar } from "./context.svelte.js"
 
 	let {
 		ref = $bindable(null),
@@ -17,9 +17,9 @@
 		side?: "left" | "right";
 		variant?: "sidebar" | "floating" | "inset";
 		collapsible?: "offcanvas" | "icon" | "none";
-	} = $props();
+	} = $props()
 
-	const sidebar = useSidebar();
+	const sidebar = useSidebar()
 </script>
 
 {#if collapsible === "none"}

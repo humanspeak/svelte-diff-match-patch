@@ -1,10 +1,10 @@
-import type { WithElementRef } from "$lib/shadcn/utils.js";
+import type { WithElementRef } from "$lib/shadcn/utils.js"
 import type {
 	EmblaCarouselSvelteType,
 	default as emblaCarouselSvelte,
-} from "embla-carousel-svelte";
-import { getContext, hasContext, setContext } from "svelte";
-import type { HTMLAttributes } from "svelte/elements";
+} from "embla-carousel-svelte"
+import { getContext, hasContext, setContext } from "svelte"
+import type { HTMLAttributes } from "svelte/elements"
 
 export type CarouselAPI =
 	NonNullable<NonNullable<EmblaCarouselSvelteType["$$_attributes"]>["on:emblaInit"]> extends (
@@ -27,7 +27,7 @@ export type CarouselProps = {
 	orientation?: "horizontal" | "vertical";
 } & WithElementRef<HTMLAttributes<HTMLDivElement>>;
 
-const EMBLA_CAROUSEL_CONTEXT = Symbol("EMBLA_CAROUSEL_CONTEXT");
+const EMBLA_CAROUSEL_CONTEXT = Symbol("EMBLA_CAROUSEL_CONTEXT")
 
 export type EmblaContext = {
 	api: CarouselAPI | undefined;
@@ -46,13 +46,13 @@ export type EmblaContext = {
 };
 
 export function setEmblaContext(config: EmblaContext): EmblaContext {
-	setContext(EMBLA_CAROUSEL_CONTEXT, config);
-	return config;
+	setContext(EMBLA_CAROUSEL_CONTEXT, config)
+	return config
 }
 
 export function getEmblaContext(name = "This component") {
 	if (!hasContext(EMBLA_CAROUSEL_CONTEXT)) {
-		throw new Error(`${name} must be used within a <Carousel.Root> component`);
+		throw new Error(`${name} must be used within a <Carousel.Root> component`)
 	}
-	return getContext<ReturnType<typeof setEmblaContext>>(EMBLA_CAROUSEL_CONTEXT);
+	return getContext<ReturnType<typeof setEmblaContext>>(EMBLA_CAROUSEL_CONTEXT)
 }

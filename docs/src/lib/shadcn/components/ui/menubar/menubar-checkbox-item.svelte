@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { Menubar as MenubarPrimitive } from "bits-ui";
-	import CheckIcon from "@lucide/svelte/icons/check";
-	import MinusIcon from "@lucide/svelte/icons/minus";
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
-	import type { Snippet } from "svelte";
+	import { Menubar as MenubarPrimitive } from "bits-ui"
+	import CheckIcon from "@lucide/svelte/icons/check"
+	import MinusIcon from "@lucide/svelte/icons/minus"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import type { Snippet } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -14,7 +14,7 @@
 		...restProps
 	}: WithoutChildrenOrChild<MenubarPrimitive.CheckboxItemProps> & {
 		children?: Snippet;
-	} = $props();
+	} = $props()
 </script>
 
 <MenubarPrimitive.CheckboxItem

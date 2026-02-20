@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { NavigationMenu as NavigationMenuPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { NavigationMenu as NavigationMenuPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: NavigationMenuPrimitive.ViewportProps = $props();
+	}: NavigationMenuPrimitive.ViewportProps = $props()
 </script>
 
 <div class={cn("absolute start-0 top-full isolate z-50 flex justify-center")}>

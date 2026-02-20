@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Menubar as MenubarPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Menubar as MenubarPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 	}: MenubarPrimitive.ItemProps & {
 		inset?: boolean;
 		variant?: "default" | "destructive";
-	} = $props();
+	} = $props()
 </script>
 
 <MenubarPrimitive.Item

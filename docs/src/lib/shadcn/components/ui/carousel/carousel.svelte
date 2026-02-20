@@ -4,8 +4,8 @@
 		type CarouselProps,
 		type EmblaContext,
 		setEmblaContext,
-	} from "./context.js";
-	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
+	} from "./context.js"
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -16,7 +16,7 @@
 		class: className,
 		children,
 		...restProps
-	}: WithElementRef<CarouselProps> = $props();
+	}: WithElementRef<CarouselProps> = $props()
 
 	let carouselState = $state<EmblaContext>({
 		api: undefined,
@@ -32,53 +32,53 @@
 		scrollSnaps: [],
 		selectedIndex: 0,
 		scrollTo,
-	});
+	})
 
-	setEmblaContext(carouselState);
+	setEmblaContext(carouselState)
 
 	function scrollPrev() {
-		carouselState.api?.scrollPrev();
+		carouselState.api?.scrollPrev()
 	}
 
 	function scrollNext() {
-		carouselState.api?.scrollNext();
+		carouselState.api?.scrollNext()
 	}
 
 	function scrollTo(index: number, jump?: boolean) {
-		carouselState.api?.scrollTo(index, jump);
+		carouselState.api?.scrollTo(index, jump)
 	}
 
 	function onSelect() {
-		if (!carouselState.api) return;
-		carouselState.selectedIndex = carouselState.api.selectedScrollSnap();
-		carouselState.canScrollNext = carouselState.api.canScrollNext();
-		carouselState.canScrollPrev = carouselState.api.canScrollPrev();
+		if (!carouselState.api) return
+		carouselState.selectedIndex = carouselState.api.selectedScrollSnap()
+		carouselState.canScrollNext = carouselState.api.canScrollNext()
+		carouselState.canScrollPrev = carouselState.api.canScrollPrev()
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
 		if (e.key === "ArrowLeft") {
-			e.preventDefault();
-			scrollPrev();
+			e.preventDefault()
+			scrollPrev()
 		} else if (e.key === "ArrowRight") {
-			e.preventDefault();
-			scrollNext();
+			e.preventDefault()
+			scrollNext()
 		}
 	}
 
 	function onInit(event: CustomEvent<CarouselAPI>) {
-		carouselState.api = event.detail;
-		setApi(carouselState.api);
+		carouselState.api = event.detail
+		setApi(carouselState.api)
 
-		carouselState.scrollSnaps = carouselState.api.scrollSnapList();
-		carouselState.api.on("select", onSelect);
-		onSelect();
+		carouselState.scrollSnaps = carouselState.api.scrollSnapList()
+		carouselState.api.on("select", onSelect)
+		onSelect()
 	}
 
 	$effect(() => {
 		return () => {
-			carouselState.api?.off("select", onSelect);
-		};
-	});
+			carouselState.api?.off("select", onSelect)
+		}
+	})
 </script>
 
 <div

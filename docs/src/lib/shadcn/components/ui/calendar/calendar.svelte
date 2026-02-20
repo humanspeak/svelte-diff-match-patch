@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { Calendar as CalendarPrimitive } from "bits-ui";
-	import * as Calendar from "./index.js";
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
-	import type { ButtonVariant } from "../button/button.svelte";
-	import { isEqualMonth, type DateValue } from "@internationalized/date";
-	import type { Snippet } from "svelte";
+	import { Calendar as CalendarPrimitive } from "bits-ui"
+	import * as Calendar from "./index.js"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import type { ButtonVariant } from "../button/button.svelte"
+	import { isEqualMonth, type DateValue } from "@internationalized/date"
+	import type { Snippet } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -30,13 +30,13 @@
 		monthFormat?: CalendarPrimitive.MonthSelectProps["monthFormat"];
 		yearFormat?: CalendarPrimitive.YearSelectProps["yearFormat"];
 		day?: Snippet<[{ day: DateValue; outsideMonth: boolean }]>;
-	} = $props();
+	} = $props()
 
 	const monthFormat = $derived.by(() => {
-		if (monthFormatProp) return monthFormatProp;
-		if (captionLayout.startsWith("dropdown")) return "short";
-		return "long";
-	});
+		if (monthFormatProp) return monthFormatProp
+		if (captionLayout.startsWith("dropdown")) return "short"
+		return "long"
+	})
 </script>
 
 <!--

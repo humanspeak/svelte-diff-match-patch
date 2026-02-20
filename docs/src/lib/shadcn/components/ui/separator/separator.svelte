@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { Separator as SeparatorPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Separator as SeparatorPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		"data-slot": dataSlot = "separator",
 		...restProps
-	}: SeparatorPrimitive.RootProps = $props();
+	}: SeparatorPrimitive.RootProps = $props()
 </script>
 
 <SeparatorPrimitive.Root

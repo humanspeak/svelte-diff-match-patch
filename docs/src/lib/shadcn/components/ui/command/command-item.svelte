@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Command as CommandPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Command as CommandPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: CommandPrimitive.ItemProps = $props();
+	}: CommandPrimitive.ItemProps = $props()
 </script>
 
 <CommandPrimitive.Item

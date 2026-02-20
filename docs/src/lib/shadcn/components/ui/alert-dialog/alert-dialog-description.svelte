@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { AlertDialog as AlertDialogPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { AlertDialog as AlertDialogPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: AlertDialogPrimitive.DescriptionProps = $props();
+	}: AlertDialogPrimitive.DescriptionProps = $props()
 </script>
 
 <AlertDialogPrimitive.Description

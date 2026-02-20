@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
-	import DropdownMenuPortal from "./dropdown-menu-portal.svelte";
-	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
-	import type { ComponentProps } from "svelte";
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import DropdownMenuPortal from "./dropdown-menu-portal.svelte"
+	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -12,7 +12,7 @@
 		...restProps
 	}: DropdownMenuPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof DropdownMenuPortal>>;
-	} = $props();
+	} = $props()
 </script>
 
 <DropdownMenuPortal {...portalProps}>

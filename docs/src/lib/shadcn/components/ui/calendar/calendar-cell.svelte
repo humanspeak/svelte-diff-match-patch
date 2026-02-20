@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Calendar as CalendarPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Calendar as CalendarPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: CalendarPrimitive.CellProps = $props();
+	}: CalendarPrimitive.CellProps = $props()
 </script>
 
 <CalendarPrimitive.Cell

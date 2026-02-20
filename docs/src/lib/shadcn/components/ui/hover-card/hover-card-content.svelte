@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { LinkPreview as HoverCardPrimitive } from "bits-ui";
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
-	import HoverCardPortal from "./hover-card-portal.svelte";
-	import type { ComponentProps } from "svelte";
+	import { LinkPreview as HoverCardPrimitive } from "bits-ui"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import HoverCardPortal from "./hover-card-portal.svelte"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -13,7 +13,7 @@
 		...restProps
 	}: HoverCardPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof HoverCardPortal>>;
-	} = $props();
+	} = $props()
 </script>
 
 <HoverCardPortal {...portalProps}>

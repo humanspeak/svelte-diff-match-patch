@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { RangeCalendar as RangeCalendarPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { RangeCalendar as RangeCalendarPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: RangeCalendarPrimitive.HeaderProps = $props();
+	}: RangeCalendarPrimitive.HeaderProps = $props()
 </script>
 
 <RangeCalendarPrimitive.Header

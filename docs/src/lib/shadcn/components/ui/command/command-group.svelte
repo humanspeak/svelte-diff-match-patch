@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Command as CommandPrimitive, useId } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Command as CommandPrimitive, useId } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 		...restProps
 	}: CommandPrimitive.GroupProps & {
 		heading?: string;
-	} = $props();
+	} = $props()
 </script>
 
 <CommandPrimitive.Group

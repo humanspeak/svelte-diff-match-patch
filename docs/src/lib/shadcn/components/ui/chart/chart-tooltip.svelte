@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { cn, type WithElementRef, type WithoutChildren } from "$lib/shadcn/utils.js";
-	import type { HTMLAttributes } from "svelte/elements";
-	import { getPayloadConfigFromPayload, useChart, type TooltipPayload } from "./chart-utils.js";
-	import { getTooltipContext, Tooltip as TooltipPrimitive } from "layerchart";
-	import type { Snippet } from "svelte";
+	import { cn, type WithElementRef, type WithoutChildren } from "$lib/shadcn/utils.js"
+	import type { HTMLAttributes } from "svelte/elements"
+	import { getPayloadConfigFromPayload, useChart, type TooltipPayload } from "./chart-utils.js"
+	import { getTooltipContext, Tooltip as TooltipPrimitive } from "layerchart"
+	import type { Snippet } from "svelte"
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	function defaultFormatter(value: any, _payload: TooltipPayload[]) {
-		return `${value}`;
+		return `${value}`
 	}
 
 	let {
@@ -45,30 +45,30 @@
 				},
 			]
 		>;
-	} = $props();
+	} = $props()
 
-	const chart = useChart();
-	const tooltipCtx = getTooltipContext();
+	const chart = useChart()
+	const tooltipCtx = getTooltipContext()
 
 	const formattedLabel = $derived.by(() => {
-		if (hideLabel || !tooltipCtx.payload?.length) return null;
+		if (hideLabel || !tooltipCtx.payload?.length) return null
 
-		const [item] = tooltipCtx.payload;
-		const key = labelKey ?? item?.label ?? item?.name ?? "value";
+		const [item] = tooltipCtx.payload
+		const key = labelKey ?? item?.label ?? item?.name ?? "value"
 
-		const itemConfig = getPayloadConfigFromPayload(chart.config, item, key);
+		const itemConfig = getPayloadConfigFromPayload(chart.config, item, key)
 
 		const value =
 			!labelKey && typeof label === "string"
 				? (chart.config[label as keyof typeof chart.config]?.label ?? label)
-				: (itemConfig?.label ?? item.label);
+				: (itemConfig?.label ?? item.label)
 
-		if (value === undefined) return null;
-		if (!labelFormatter) return value;
-		return labelFormatter(value, tooltipCtx.payload);
-	});
+		if (value === undefined) return null
+		if (!labelFormatter) return value
+		return labelFormatter(value, tooltipCtx.payload)
+	})
 
-	const nestLabel = $derived(tooltipCtx.payload.length === 1 && indicator !== "dot");
+	const nestLabel = $derived(tooltipCtx.payload.length === 1 && indicator !== "dot")
 </script>
 
 {#snippet TooltipLabel()}

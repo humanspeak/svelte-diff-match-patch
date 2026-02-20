@@ -1,7 +1,7 @@
 <script lang="ts" module>
-	import { getContext, setContext } from "svelte";
-	import type { VariantProps } from "tailwind-variants";
-	import { toggleVariants } from "$lib/shadcn/components/ui/toggle/index.js";
+	import { getContext, setContext } from "svelte"
+	import type { VariantProps } from "tailwind-variants"
+	import { toggleVariants } from "$lib/shadcn/components/ui/toggle/index.js"
 
 	type ToggleVariants = VariantProps<typeof toggleVariants>;
 
@@ -10,17 +10,17 @@
 	}
 
 	export function setToggleGroupCtx(props: ToggleGroupContext) {
-		setContext("toggleGroup", props);
+		setContext("toggleGroup", props)
 	}
 
 	export function getToggleGroupCtx() {
-		return getContext<Required<ToggleGroupContext>>("toggleGroup");
+		return getContext<Required<ToggleGroupContext>>("toggleGroup")
 	}
 </script>
 
 <script lang="ts">
-	import { ToggleGroup as ToggleGroupPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { ToggleGroup as ToggleGroupPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -30,13 +30,13 @@
 		spacing = 0,
 		variant = "default",
 		...restProps
-	}: ToggleGroupPrimitive.RootProps & ToggleVariants & { spacing?: number } = $props();
+	}: ToggleGroupPrimitive.RootProps & ToggleVariants & { spacing?: number } = $props()
 
 	setToggleGroupCtx({
 		variant,
 		size,
 		spacing,
-	});
+	})
 </script>
 
 <!--

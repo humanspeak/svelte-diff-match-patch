@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
-	import type { Snippet } from "svelte";
-	import type { HTMLButtonAttributes } from "svelte/elements";
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js"
+	import type { Snippet } from "svelte"
+	import type { HTMLButtonAttributes } from "svelte/elements"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 		...restProps
 	}: WithElementRef<HTMLButtonAttributes> & {
 		child?: Snippet<[{ props: Record<string, unknown> }]>;
-	} = $props();
+	} = $props()
 
 	const mergedProps = $derived({
 		class: cn(
@@ -24,7 +24,7 @@
 		"data-slot": "sidebar-group-action",
 		"data-sidebar": "group-action",
 		...restProps,
-	});
+	})
 </script>
 
 {#if child}

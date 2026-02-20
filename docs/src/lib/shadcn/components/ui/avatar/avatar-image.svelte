@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Avatar as AvatarPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { Avatar as AvatarPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		...restProps
-	}: AvatarPrimitive.ImageProps = $props();
+	}: AvatarPrimitive.ImageProps = $props()
 </script>
 
 <AvatarPrimitive.Image

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { cn } from "$lib/shadcn/utils.js";
-	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui";
+	import { cn } from "$lib/shadcn/utils.js"
+	import { DropdownMenu as DropdownMenuPrimitive } from "bits-ui"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 	}: DropdownMenuPrimitive.ItemProps & {
 		inset?: boolean;
 		variant?: "default" | "destructive";
-	} = $props();
+	} = $props()
 </script>
 
 <DropdownMenuPrimitive.Item

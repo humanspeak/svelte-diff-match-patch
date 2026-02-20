@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { cn } from "$lib/shadcn/utils.js";
-	import { type WithElementRef } from "bits-ui";
-	import type { HTMLAttributes } from "svelte/elements";
+	import { cn } from "$lib/shadcn/utils.js"
+	import { type WithElementRef } from "bits-ui"
+	import type { HTMLAttributes } from "svelte/elements"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLElement>> & {
 		inset?: boolean;
-	} = $props();
+	} = $props()
 </script>
 
 <div

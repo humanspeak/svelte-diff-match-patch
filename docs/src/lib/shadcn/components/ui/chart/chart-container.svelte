@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { cn, type WithElementRef } from "$lib/shadcn/utils.js";
-	import type { HTMLAttributes } from "svelte/elements";
-	import ChartStyle from "./chart-style.svelte";
-	import { setChartContext, type ChartConfig } from "./chart-utils.js";
+	import { cn, type WithElementRef } from "$lib/shadcn/utils.js"
+	import type { HTMLAttributes } from "svelte/elements"
+	import ChartStyle from "./chart-style.svelte"
+	import { setChartContext, type ChartConfig } from "./chart-utils.js"
 
-	const uid = $props.id();
+	const uid = $props.id()
 
 	let {
 		ref = $bindable(null),
@@ -15,15 +15,15 @@
 		...restProps
 	}: WithElementRef<HTMLAttributes<HTMLElement>> & {
 		config: ChartConfig;
-	} = $props();
+	} = $props()
 
-	const chartId = `chart-${id || uid.replace(/:/g, "")}`;
+	const chartId = `chart-${id || uid.replace(/:/g, "")}`
 
 	setChartContext({
 		get config() {
-			return config;
+			return config
 		},
-	});
+	})
 </script>
 
 <div

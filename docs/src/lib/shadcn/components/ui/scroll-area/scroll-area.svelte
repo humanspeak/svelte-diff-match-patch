@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { ScrollArea as ScrollAreaPrimitive } from "bits-ui";
-	import { Scrollbar } from "./index.js";
-	import { cn, type WithoutChild } from "$lib/shadcn/utils.js";
+	import { ScrollArea as ScrollAreaPrimitive } from "bits-ui"
+	import { Scrollbar } from "./index.js"
+	import { cn, type WithoutChild } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -17,7 +17,7 @@
 		scrollbarXClasses?: string | undefined;
 		scrollbarYClasses?: string | undefined;
 		viewportRef?: HTMLElement | null;
-	} = $props();
+	} = $props()
 </script>
 
 <ScrollAreaPrimitive.Root

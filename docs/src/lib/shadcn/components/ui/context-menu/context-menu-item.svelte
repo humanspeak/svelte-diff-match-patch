@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
-	import { cn } from "$lib/shadcn/utils.js";
+	import { ContextMenu as ContextMenuPrimitive } from "bits-ui"
+	import { cn } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -11,7 +11,7 @@
 	}: ContextMenuPrimitive.ItemProps & {
 		inset?: boolean;
 		variant?: "default" | "destructive";
-	} = $props();
+	} = $props()
 </script>
 
 <ContextMenuPrimitive.Item

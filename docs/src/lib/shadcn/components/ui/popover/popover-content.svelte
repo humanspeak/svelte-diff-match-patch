@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { Popover as PopoverPrimitive } from "bits-ui";
-	import PopoverPortal from "./popover-portal.svelte";
-	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
-	import type { ComponentProps } from "svelte";
+	import { Popover as PopoverPrimitive } from "bits-ui"
+	import PopoverPortal from "./popover-portal.svelte"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -13,7 +13,7 @@
 		...restProps
 	}: PopoverPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof PopoverPortal>>;
-	} = $props();
+	} = $props()
 </script>
 
 <PopoverPortal {...portalProps}>

@@ -1,10 +1,9 @@
 <script lang="ts">
-	import { Drawer as DrawerPrimitive } from "vaul-svelte";
-	import DrawerPortal from "./drawer-portal.svelte";
-	import DrawerOverlay from "./drawer-overlay.svelte";
-	import { cn } from "$lib/shadcn/utils.js";
-	import type { ComponentProps } from "svelte";
-	import type { WithoutChildrenOrChild } from "$lib/shadcn/utils.js";
+	import { Drawer as DrawerPrimitive } from "vaul-svelte"
+	import DrawerPortal from "./drawer-portal.svelte"
+	import DrawerOverlay from "./drawer-overlay.svelte"
+	import { cn, type WithoutChildrenOrChild } from "$lib/shadcn/utils.js"
+	import type { ComponentProps } from "svelte"
 
 	let {
 		ref = $bindable(null),
@@ -14,7 +13,7 @@
 		...restProps
 	}: DrawerPrimitive.ContentProps & {
 		portalProps?: WithoutChildrenOrChild<ComponentProps<typeof DrawerPortal>>;
-	} = $props();
+	} = $props()
 </script>
 
 <DrawerPortal {...portalProps}>

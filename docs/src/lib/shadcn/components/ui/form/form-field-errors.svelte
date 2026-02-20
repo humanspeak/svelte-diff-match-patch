@@ -1,6 +1,6 @@
 <script lang="ts">
-	import * as FormPrimitive from "formsnap";
-	import { cn, type WithoutChild } from "$lib/shadcn/utils.js";
+	import * as FormPrimitive from "formsnap"
+	import { cn, type WithoutChild } from "$lib/shadcn/utils.js"
 
 	let {
 		ref = $bindable(null),
@@ -10,7 +10,7 @@
 		...restProps
 	}: WithoutChild<FormPrimitive.FieldErrorsProps> & {
 		errorClasses?: string | undefined | null;
-	} = $props();
+	} = $props()
 </script>
 
 <FormPrimitive.FieldErrors
