@@ -21,7 +21,7 @@ From wicked puns and stupid jokes to anvils that drop on your head.`)
     let cleanupSemantic = localStore<boolean>('cleanupSemantic', false)
     let cleanupEfficiency = localStore<number>('cleanupEfficiency', 4)
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const onProcessing = (timing: SvelteDiffMatchPatchTiming, diff: SvelteDiffMatchPatchDiff) => {
         console.log('timing', timing)
         console.log('diff', diff)
