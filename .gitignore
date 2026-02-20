@@ -32,3 +32,4 @@ vite.config.ts.timestamp-*
 junit-vitest.xml
 junit-playwright.xml
 .playwright-mcp/**
+.notes/**
