@@ -1,18 +1,45 @@
+/**
+ * Describes the position of a named capture group match within the modified text.
+ *
+ * Used to track where dynamic "expected" regions (e.g., year, holder name)
+ * appear in `modifiedText` so they can be tagged with distinct styling.
+ */
 export interface CaptureRange {
+    /** The name of the capture group (e.g., `"year"`, `"holder"`). */
     name: string
+    /** The start index (inclusive) in `modifiedText`. */
     start: number
+    /** The end index (exclusive) in `modifiedText`. */
     end: number
 }
 
+/**
+ * A single segment of a diff result, optionally tagged as an "expected" region.
+ *
+ * - `operation` follows diff-match-patch conventions: `-1` = remove, `0` = equal, `1` = insert.
+ * - When `expected` is set, this segment matched a named capture group and should
+ *   render with "expected" styling rather than insert/remove colors.
+ */
 export interface DisplayDiff {
-    operation: number // -1, 0, 1
+    /** The diff operation: `-1` (remove), `0` (equal), or `1` (insert). */
+    operation: number
+    /** The text content of this diff segment. */
     text: string
-    expected?: string // capture group name if this is an expected region
+    /** If set, the name of the capture group this segment matched (e.g., `"year"`). */
+    expected?: string
 }
 
+/**
+ * The result of matching expected patterns against modified text.
+ *
+ * Returned by {@link extractCaptures} when all capture groups successfully match.
+ */
 export interface PatternMatchResult {
+    /** The template with capture group syntax replaced by actual captured values. */
     resolvedText: string
+    /** A map of capture group names to their matched values. */
     captures: Record<string, string>
+    /** The positions of each capture in `modifiedText`. */
     captureRanges: CaptureRange[]
 }
 

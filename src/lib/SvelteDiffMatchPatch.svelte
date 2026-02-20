@@ -1,43 +1,58 @@
 <!--
 @component
 
-A Svelte component that visually compares two strings and renders their differences using the diff-match-patch algorithm.
-Supports character-level diffing, semantic and efficiency cleanup, custom rendering via Svelte snippets, and flexible styling.
+A Svelte 5 component that visually compares two strings using the diff-match-patch algorithm.
 
-@example
+Supports character-level diffing, semantic and efficiency cleanup, custom rendering via Svelte snippets, and flexible CSS-class styling.
+
+### Expected Patterns
+
+When `originalText` contains named capture groups like `(?<year>\\d{4})`, the component
+extracts matching values from `modifiedText` and renders them with distinct "expected"
+styling instead of normal insert/remove colors. This is useful for templates where
+certain dynamic regions (dates, names, versions) are expected to differ.
+
+@example Basic usage with CSS classes
 ```svelte
 <SvelteDiffMatchPatch
   originalText={oldValue}
   modifiedText={newValue}
-  timeout={2}
   cleanupSemantic={true}
-  cleanupEfficiency={4}
   rendererClasses={{
     remove: 'bg-red-100 text-red-800',
     insert: 'bg-green-100 text-green-800',
     equal: 'text-gray-700'
   }}
 />
+```
 
-<SvelteDiffMatchPatch
-  originalText={a}
-  modifiedText={b}
->
-  {#snippet remove(text: string)}<span class="my-remove">{text}</span>{/snippet}
-  {#snippet insert(text: string)}<span class="my-insert">{text}</span>{/snippet}
-  {#snippet equal(text: string)}<span class="my-equal">{text}</span>{/snippet}
+@example Custom snippet rendering
+```svelte
+<SvelteDiffMatchPatch originalText={a} modifiedText={b}>
+  {#snippet remove(text)}<del class="diff-remove">{text}</del>{/snippet}
+  {#snippet insert(text)}<ins class="diff-insert">{text}</ins>{/snippet}
+  {#snippet equal(text)}<span>{text}</span>{/snippet}
+  {#snippet expected(text, groupName)}<mark title={groupName}>{text}</mark>{/snippet}
   {#snippet lineBreak()}<br />{/snippet}
 </SvelteDiffMatchPatch>
 ```
 
-@property {string} originalText - The original (left-side) string to compare (the "before" or source text)
+@example Expected patterns (named capture groups)
+```svelte
+<SvelteDiffMatchPatch
+  originalText={'Copyright (?<year>\\d{4}) (?<holder>.+)'}
+  modifiedText={'Copyright 2024 Jason Kummerl'}
+/>
+```
+
+@property {string} originalText - The original (left-side) string to compare (the "before" or source text). May contain `(?<name>pattern)` capture groups for expected-pattern matching.
 @property {string} modifiedText - The modified (right-side) string to compare (the "after" or target text)
 @property {number} [timeout=1] - Maximum time in seconds to spend computing the diff (0 for unlimited)
 @property {boolean} [cleanupSemantic=false] - If true, applies semantic cleanup for human readability
 @property {number} [cleanupEfficiency=4] - Edit cost for efficiency cleanup; higher values are more aggressive
-@property {function} [onProcessing] - Callback invoked after diff computation, receiving timing info ({ main, cleanup, total } in ms)
-@property {Partial<Renderers>} [renderers] - Custom Svelte snippets for rendering diff segments (remove, insert, equal, expected, lineBreak)
-@property {RendererClasses} [rendererClasses] - Custom CSS classes for each diff type (remove, insert, equal, expected); only works if renderers is not set
+@property {function} [onProcessing] - Callback invoked after diff computation, receiving `(timing, diffs, captures?)`. The `captures` argument is a `Record<string, string>` when expected patterns match.
+@property {Partial<Renderers>} [renderers] - Custom Svelte snippets for rendering diff segments: `remove`, `insert`, `equal`, `expected`, and `lineBreak`
+@property {RendererClasses} [rendererClasses] - Custom CSS classes for each diff type: `remove`, `insert`, `equal`, `expected`. Only effective when `renderers` is not set.
 -->
 
 <script lang="ts">
