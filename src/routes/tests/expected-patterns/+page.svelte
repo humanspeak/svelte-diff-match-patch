@@ -15,7 +15,7 @@ copies or substantial portions of the Software.`)
 
     let text2 = $state(`MIT License
 
-Copyright (c) 2024 Jason Kummerl
+Copyright (c) 2024 Humanspeak
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the 'Software'), to deal
