@@ -3,16 +3,19 @@ import type { Snippet } from 'svelte'
 import SvelteDiffMatchPatch from './SvelteDiffMatchPatch.svelte'
 
 export default SvelteDiffMatchPatch
+export type { CaptureRange, DisplayDiff, PatternMatchResult } from './expectedPatterns.js'
 export type Renderers = {
     remove?: Snippet<[string]>
     equal?: Snippet<[string]>
     insert?: Snippet<[string]>
+    expected?: Snippet<[string, string]>
     lineBreak?: Snippet<[]>
 }
 export type RendererClasses = {
     remove?: string
     equal?: string
     insert?: string
+    expected?: string
 }
 export type SvelteDiffMatchPatchTiming = { main: number; cleanup: number; total: number }
 export type SvelteDiffMatchPatchDiff = Diff
@@ -92,7 +95,11 @@ export interface SvelteDiffMatchPatchProps {
      * ```
      */
     /* trunk-ignore(eslint/no-unused-vars) */
-    onProcessing?: (timing: SvelteDiffMatchPatchTiming, diffs: SvelteDiffMatchPatchDiff[]) => void
+    onProcessing?: (
+        timing: SvelteDiffMatchPatchTiming,
+        diffs: SvelteDiffMatchPatchDiff[],
+        captures?: Record<string, string>
+    ) => void
     /**
      * Custom Svelte snippets for rendering diff segments.
      *
