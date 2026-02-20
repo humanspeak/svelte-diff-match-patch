@@ -14,6 +14,7 @@ export default [
             '**/.DS_Store',
             '**/node_modules',
             'postcss.config.cjs',
+            'coverage',
             '**/build',
             '.svelte-kit',
             'package',
@@ -23,9 +24,8 @@ export default [
             '**/pnpm-lock.yaml',
             '**/package-lock.json',
             '**/yarn.lock',
-            'src/routes/poc',
             '**/dist',
-            'vite.config.ts.*'
+            '**/*.test.ts'
         ]
     },
     js.configs.recommended,
@@ -35,15 +35,16 @@ export default [
     ...svelte.configs['flat/prettier'],
     {
         languageOptions: {
+            parserOptions: {
+                tsconfigRootDir: import.meta.dirname
+            },
             globals: {
                 ...globals.browser,
                 ...globals.node
             }
         },
-
         rules: {
             semi: ['warn', 'never'],
-            quotes: ['error', 'single'],
             'dot-location': ['warn', 'property'],
             'guard-for-in': ['warn'],
             'no-multi-spaces': ['warn'],
@@ -64,13 +65,6 @@ export default [
             'no-var': ['error'],
             'prefer-const': ['error'],
 
-            'no-unused-vars': [
-                'warn',
-                {
-                    argsIgnorePattern: '^_',
-                    ignoreRestSiblings: true
-                }
-            ],
             '@typescript-eslint/no-unused-expressions': [
                 'error',
                 {
@@ -78,15 +72,35 @@ export default [
                     allowTernary: true,
                     allowTaggedTemplates: true
                 }
+            ],
+
+            'no-unused-vars': [
+                'warn',
+                {
+                    argsIgnorePattern: '^_',
+                    ignoreRestSiblings: true
+                }
+            ],
+
+            '@typescript-eslint/no-unused-vars': [
+                'warn',
+                {
+                    argsIgnorePattern: '^_',
+                    ignoreRestSiblings: true
+                }
             ]
         }
     },
     {
-        files: ['**/*.svelte'],
+        files: ['**/*.svelte', '**/*.svelte.ts'],
         languageOptions: {
             parserOptions: {
                 parser: ts.parser
             }
+        },
+        rules: {
+            'prefer-const': ['off'],
+            'svelte/no-navigation-without-resolve': ['off'] // Allow external links
         }
     },
     {
