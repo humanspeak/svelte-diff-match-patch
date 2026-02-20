@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Svelte Diff Match Patch — a Svelte component library for visual string diffing using the diff-match-patch algorithm. Supports character-level diffing, expected pattern matching with named capture groups, and flexible rendering.
+Svelte Diff Match Patch — a Svelte component library for visual string diffing using the diff-match-patch algorithm. Supports character-level diffing, expected pattern-matching with named capture groups, and flexible rendering.
 
 ## Coding Style Requirements
 
@@ -12,9 +12,9 @@ Svelte Diff Match Patch — a Svelte component library for visual string diffing
 
 ## Build & Test Commands
 
-- `npm run build` — Build the project (vite build + svelte-package + publint)
-- `npx vitest run src/lib/` — Run unit tests
-- `npx playwright test` — Run E2E tests
+- `pnpm run build` — Build the project (vite build + svelte-package + publint)
+- `pnpm vitest run src/lib/` — Run unit tests
+- `pnpm playwright test` — Run E2E tests
 - `trunk fmt` — Format files
 - `trunk check` — Lint/check files
 
@@ -22,7 +22,7 @@ Svelte Diff Match Patch — a Svelte component library for visual string diffing
 
 - `src/lib/` — Core library source
     - `SvelteDiffMatchPatch.svelte` — Main component
-    - `expectedPatterns.ts` — Expected pattern matching algorithm
+    - `expectedPatterns.ts` — Expected pattern-matching algorithm
     - `index.ts` — Public exports and types
 - `src/routes/` — Demo/test pages (SvelteKit routes)
 - `docs/` — Documentation website
