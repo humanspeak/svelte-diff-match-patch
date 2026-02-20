@@ -16,8 +16,8 @@ test.describe('SvelteDiffMatchPatch', () => {
     })
 
     test('applies custom rendererClasses', async ({ page }) => {
-        await page.fill('[data-testid="text1"]', 'foo shoo')
-        await page.fill('[data-testid="text2"]', 'bar shoo')
+        await page.getByTestId('text1').fill('foo shoo')
+        await page.getByTestId('text2').fill('bar shoo')
         await expect(page.getByTestId('diff-result').locator('.diff-remove')).toBeVisible()
         await expect(page.getByTestId('diff-result').locator('.diff-insert')).toBeVisible()
         await expect(page.getByTestId('diff-result').locator('.diff-equal')).toBeVisible()
