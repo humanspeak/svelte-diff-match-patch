@@ -54,8 +54,105 @@ interface ParseResult {
     parts: string[]
 }
 
-const GROUP_REGEX =
-    /\(\?<([a-zA-Z_][a-zA-Z0-9_]*)>((?:[^()]*|\((?!\?<)(?:[^()]*|\([^()]*\))*\))*)?\)/g
+/**
+ * Represents a named capture group match found by the iterative parser.
+ */
+interface GroupMatch {
+    /** The full `(?<name>pattern)` string. */
+    fullMatch: string
+    /** The capture group name. */
+    name: string
+    /** The pattern inside the group (between `>` and closing `)`). */
+    pattern: string
+    /** The start index of the full match in the source text. */
+    index: number
+}
+
+/**
+ * Finds all `(?<name>pattern)` named capture groups using an iterative
+ * parenthesis-counting parser. Runs in O(n) time with no backtracking,
+ * eliminating ReDoS risk from nested quantifiers.
+ *
+ * Rejects nested named groups (`(?<` inside the pattern body) to match
+ * the previous regex behavior.
+ *
+ * @param text - The text to scan for named capture groups.
+ * @returns An array of matched groups with their positions.
+ */
+const findNamedGroups = (text: string): GroupMatch[] => {
+    const results: GroupMatch[] = []
+    let i = 0
+
+    while (i < text.length) {
+        // Look for `(?<` marker
+        if (text[i] === '(' && text[i + 1] === '?' && text[i + 2] === '<') {
+            const startIndex = i
+
+            // Parse the name: must be [a-zA-Z_][a-zA-Z0-9_]*
+            const nameStart = i + 3
+            if (nameStart >= text.length || !/[a-zA-Z_]/.test(text[nameStart])) {
+                i++
+                continue
+            }
+
+            let nameEnd = nameStart + 1
+            while (nameEnd < text.length && /[a-zA-Z0-9_]/.test(text[nameEnd])) {
+                nameEnd++
+            }
+
+            // Expect `>` after the name
+            if (nameEnd >= text.length || text[nameEnd] !== '>') {
+                i++
+                continue
+            }
+
+            const name = text.slice(nameStart, nameEnd)
+            const patternStart = nameEnd + 1
+
+            // Count parenthesis depth to find balanced closing `)`
+            // We start at depth 1 (for the opening `(` at startIndex)
+            let depth = 1
+            let j = patternStart
+            let hasNestedNamedGroup = false
+
+            while (j < text.length && depth > 0) {
+                if (text[j] === '\\') {
+                    j += 2 // skip escaped character
+                    continue
+                }
+                if (text[j] === '(') {
+                    // Check for nested named group
+                    if (
+                        text[j + 1] === '?' &&
+                        text[j + 2] === '<' &&
+                        j + 3 < text.length &&
+                        /[a-zA-Z_]/.test(text[j + 3])
+                    ) {
+                        hasNestedNamedGroup = true
+                    }
+                    depth++
+                } else if (text[j] === ')') {
+                    depth--
+                    if (depth === 0) break
+                }
+                j++
+            }
+
+            if (depth === 0 && !hasNestedNamedGroup) {
+                const pattern = text.slice(patternStart, j)
+                const fullMatch = text.slice(startIndex, j + 1)
+                results.push({ fullMatch, name, pattern, index: startIndex })
+                i = j + 1
+            } else {
+                i++
+            }
+        } else {
+            i++
+        }
+    }
+
+    return results
+}
 
 /**
  * Parses `(?<name>pattern)` named capture groups from text.
@@ -67,20 +164,19 @@ const GROUP_REGEX =
  * @returns The parsed groups and parts, or null if no named groups are found.
  */
 export const parseExpectedPatterns = (text: string): ParseResult | null => {
-    const groupRegex = new RegExp(GROUP_REGEX.source, GROUP_REGEX.flags)
+    const matches = findNamedGroups(text)
+    if (matches.length === 0) return null
+
     const groups: ParsedGroup[] = []
     const parts: string[] = []
     let lastIndex = 0
-    let match: RegExpExecArray | null
 
-    while ((match = groupRegex.exec(text)) !== null) {
+    for (const match of matches) {
         parts.push(text.slice(lastIndex, match.index))
-        groups.push({ name: match[1], pattern: match[2] ?? '' })
-        parts.push(match[0]) // the full group match as a placeholder
-        lastIndex = groupRegex.lastIndex
+        groups.push({ name: match.name, pattern: match.pattern })
+        parts.push(match.fullMatch) // the full group match as a placeholder
+        lastIndex = match.index + match.fullMatch.length
     }
-
-    if (groups.length === 0) return null
 
     parts.push(text.slice(lastIndex))
     return { groups, parts }
@@ -96,8 +192,18 @@ export const parseExpectedPatterns = (text: string): ParseResult | null => {
  * @returns The text with capture groups replaced by `<name>` placeholders.
  */
 export const cleanTemplate = (text: string): string => {
-    const groupRegex = new RegExp(GROUP_REGEX.source, GROUP_REGEX.flags)
-    return text.replace(groupRegex, (_, name) => `<${name}>`)
+    const matches = findNamedGroups(text)
+    if (matches.length === 0) return text
+
+    let result = ''
+    let lastIndex = 0
+    for (const match of matches) {
+        result += text.slice(lastIndex, match.index)
+        result += `<${match.name}>`
+        lastIndex = match.index + match.fullMatch.length
+    }
+    result += text.slice(lastIndex)
+    return result
 }
 
 /**
@@ -134,13 +240,12 @@ const groupByLine = (
     originalText: string,
     _parseResult: ParseResult
 ): Map<number, { lineText: string; groups: LineGroup[] }> => {
-    const groupRegex = new RegExp(GROUP_REGEX.source, GROUP_REGEX.flags)
+    const matches = findNamedGroups(originalText)
     const lines = originalText.split('\n')
 
     const lineMap = new Map<number, { lineText: string; groups: LineGroup[] }>()
-    let match: RegExpExecArray | null
 
-    while ((match = groupRegex.exec(originalText)) !== null) {
+    for (const match of matches) {
         const absIndex = match.index
         let charCount = 0
         let lineNum = 0
@@ -163,8 +268,8 @@ const groupByLine = (
         }
 
         lineMap.get(lineNum)!.groups.push({
-            name: match[1],
-            pattern: match[2] ?? '',
+            name: match.name,
+            pattern: match.pattern,
             indexInLine: absIndex - lineStartOffset
         })
     }
@@ -307,8 +412,18 @@ export const extractCaptures = (
  * @returns The template with capture groups replaced by their captured values.
  */
 const resolveTemplate = (text: string, captures: Record<string, string>): string => {
-    const groupRegex = new RegExp(GROUP_REGEX.source, GROUP_REGEX.flags)
-    return text.replace(groupRegex, (_, name) => captures[name] ?? '')
+    const matches = findNamedGroups(text)
+    if (matches.length === 0) return text
+
+    let result = ''
+    let lastIndex = 0
+    for (const match of matches) {
+        result += text.slice(lastIndex, match.index)
+        result += captures[match.name] ?? ''
+        lastIndex = match.index + match.fullMatch.length
+    }
+    result += text.slice(lastIndex)
+    return result
 }
 
 /**

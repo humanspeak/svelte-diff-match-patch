@@ -254,6 +254,58 @@ describe('tagExpectedRegions', () => {
     })
 })
 
+describe('findNamedGroups (via parseExpectedPatterns)', () => {
+    it('completes in under 100ms on malformed input with 50k trailing chars (ReDoS regression)', () => {
+        const malicious = '(?<A>' + 'a'.repeat(50000)
+        const start = performance.now()
+        const result = parseExpectedPatterns(malicious)
+        const elapsed = performance.now() - start
+
+        expect(result).toBeNull()
+        expect(elapsed).toBeLessThan(100)
+    })
+
+    it('handles deep nesting (3+ levels) inside a group', () => {
+        const text = '(?<name>(?:a|(?:b|(?:c|d))))'
+        const result = parseExpectedPatterns(text)
+
+        expect(result).not.toBeNull()
+        expect(result!.groups).toHaveLength(1)
+        expect(result!.groups[0].name).toBe('name')
+        expect(result!.groups[0].pattern).toBe('(?:a|(?:b|(?:c|d)))')
+    })
+
+    it('rejects the outer group when it contains a nested named group', () => {
+        const text = '(?<outer>(?<inner>foo))'
+        const result = parseExpectedPatterns(text)
+
+        // The outer group is rejected due to nested named group,
+        // but the inner group is still found as a standalone match
+        expect(result).not.toBeNull()
+        expect(result!.groups).toHaveLength(1)
+        expect(result!.groups[0].name).toBe('inner')
+        expect(result!.groups[0].pattern).toBe('foo')
+    })
+
+    it('handles escaped parentheses inside groups', () => {
+        const text = 'before (?<name>\\(escaped\\)) after'
+        const result = parseExpectedPatterns(text)
+
+        expect(result).not.toBeNull()
+        expect(result!.groups[0].name).toBe('name')
+        expect(result!.groups[0].pattern).toBe('\\(escaped\\)')
+    })
+
+    it('handles empty pattern in group', () => {
+        const text = '(?<empty>)'
+        const result = parseExpectedPatterns(text)
+
+        expect(result).not.toBeNull()
+        expect(result!.groups[0].name).toBe('empty')
+        expect(result!.groups[0].pattern).toBe('')
+    })
+})
+
 describe('cleanTemplate', () => {
     it('replaces named groups with readable placeholders', () => {
         expect(cleanTemplate('Copyright (?<year>\\d{4}) (?<holder>.+)')).toBe(
